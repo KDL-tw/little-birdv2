@@ -68,29 +68,27 @@ export default function AdminPage() {
 
   return (
     <Layout>
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="gov-header">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2">
-                <Settings className="h-6 w-6" />
-                Admin Panel
-              </h1>
-              <p className="text-primary-foreground/80 mt-1">
-                Manage data synchronization and platform settings
-              </p>
-            </div>
-            <Badge variant="secondary" className="gov-status-inactive">
-              System Status: Ready
-            </Badge>
+      <header className="bg-amber-50/80 backdrop-blur-md border-b border-amber-200/50 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <Settings className="h-8 w-8 text-indigo-600" />
+              Admin Panel
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Manage data synchronization and platform settings
+            </p>
           </div>
+          <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
+            System Status: Ready
+          </Badge>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="p-6">
         {/* Data Sync Section */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">

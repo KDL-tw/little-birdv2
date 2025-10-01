@@ -11,29 +11,27 @@ export default function BillsPage() {
 
   return (
     <Layout>
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="gov-header">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2">
-                <FileText className="h-6 w-6" />
-                Colorado Bills
-              </h1>
-              <p className="text-primary-foreground/80 mt-1">
-                Track and monitor Colorado General Assembly legislation
-              </p>
-            </div>
-            <Badge variant="secondary" className="gov-status-inactive">
-              {bills.length} bills loaded
-            </Badge>
+      <header className="bg-amber-50/80 backdrop-blur-md border-b border-amber-200/50 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <FileText className="h-8 w-8 text-indigo-600" />
+              Colorado Bills
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Track and monitor Colorado General Assembly legislation
+            </p>
           </div>
+          <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
+            {bills.length} bills loaded
+          </Badge>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="p-6">
         {/* Filters and Search */}
         <Card className="gov-card mb-6">
           <CardHeader>
