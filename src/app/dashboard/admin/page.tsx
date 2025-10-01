@@ -1,3 +1,5 @@
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,11 +16,55 @@ import {
 } from "lucide-react";
 import { fetchBills, fetchLegislators } from "@/lib/data";
 import { Layout } from "@/components/layout";
+import { useState, useEffect } from "react";
 
-export default async function AdminPage() {
-  // Get current data counts
-  const bills = await fetchBills();
-  const legislators = await fetchLegislators();
+export default function AdminPage() {
+  // State for data counts
+  const [bills, setBills] = useState<any[]>([]);
+  const [legislators, setLegislators] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const billsData = await fetchBills();
+        const legislatorsData = await fetchLegislators();
+        setBills(billsData);
+        setLegislators(legislatorsData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Handler functions for sync buttons
+  const handleSyncBills = () => {
+    console.log('Ready for API connection - Colorado General Assembly integration');
+    console.log('fetchBills() called from admin panel');
+  };
+
+  const handleSyncLegislators = () => {
+    console.log('Ready for API connection - Colorado General Assembly integration');
+    console.log('fetchLegislators() called from admin panel');
+  };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center">
+            <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p>Loading admin panel...</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -87,10 +133,7 @@ export default async function AdminPage() {
                 
                 <Button 
                   className="w-full gov-button-primary"
-                  onClick={() => {
-                    console.log('Ready for API connection - Colorado General Assembly integration');
-                    console.log('fetchBills() called from admin panel');
-                  }}
+                  onClick={handleSyncBills}
                 >
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Sync Colorado Bills
@@ -132,10 +175,7 @@ export default async function AdminPage() {
                 
                 <Button 
                   className="w-full gov-button-primary"
-                  onClick={() => {
-                    console.log('Ready for API connection - Colorado General Assembly integration');
-                    console.log('fetchLegislators() called from admin panel');
-                  }}
+                  onClick={handleSyncLegislators}
                 >
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Sync Legislators
