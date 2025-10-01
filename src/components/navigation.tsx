@@ -43,23 +43,23 @@ export function Navigation() {
 
   return (
     <nav className={cn(
-      "bg-indigo-950 text-white h-screen flex flex-col transition-all duration-300 ease-in-out",
+      "bg-indigo-950/95 backdrop-blur-md text-white h-screen flex flex-col transition-all duration-300 ease-in-out",
       isCollapsed ? "w-16" : "w-64"
     )}>
       <div className="flex flex-col h-full">
         {/* Logo */}
-        <div className="flex items-center justify-between px-4 py-6 border-b border-indigo-900">
+        <div className="flex items-center justify-between px-4 py-6 border-b border-indigo-900/50">
           <div className="flex items-center space-x-3">
             {!isCollapsed && (
               <span className="font-bold text-lg whitespace-nowrap">
-                <span className="text-gray-400">little</span>
-                <span className="text-white">bird</span>
+                <span className="text-gray-400">LITTLE</span>
+                <span className="text-white">BIRD</span>
               </span>
             )}
           </div>
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-1 rounded-lg hover:bg-indigo-900 transition-colors"
+            className="p-1 rounded-lg hover:bg-indigo-900/50 transition-colors"
           >
             {isCollapsed ? (
               <ChevronRight className="h-4 w-4" />
@@ -81,8 +81,8 @@ export function Navigation() {
                     className={cn(
                       "flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 group",
                       isActive
-                        ? "bg-indigo-600 text-white shadow-sm"
-                        : "text-indigo-200 hover:text-white hover:bg-indigo-900"
+                        ? "bg-indigo-600/80 text-white shadow-sm"
+                        : "text-indigo-200 hover:text-white hover:bg-indigo-900/50"
                     )}
                     title={isCollapsed ? item.name : undefined}
                   >
@@ -113,8 +113,8 @@ export function Navigation() {
                       className={cn(
                         "flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 group",
                         isActive
-                          ? "bg-indigo-600 text-white shadow-sm"
-                          : "text-indigo-200 hover:text-white hover:bg-indigo-900"
+                          ? "bg-indigo-600/80 text-white shadow-sm"
+                          : "text-indigo-200 hover:text-white hover:bg-indigo-900/50"
                       )}
                       title={isCollapsed ? item.name : undefined}
                     >
@@ -131,10 +131,10 @@ export function Navigation() {
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-4 border-t border-indigo-900">
+        <div className="px-4 py-4 border-t border-indigo-900/50">
           {!isCollapsed && (
             <div className="text-indigo-300 text-xs">
-              littlebird v1.0
+              LITTLEBIRD v1.0
             </div>
           )}
         </div>
