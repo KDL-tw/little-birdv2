@@ -6,9 +6,9 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-gray-50">
       <Navigation />
-      <main className="flex-1">
+      <main className="flex-1 min-h-screen">
         {children}
       </main>
     </div>
