@@ -20,8 +20,8 @@ import { useState, useEffect } from "react";
 
 export default function AdminPage() {
   // State for data counts
-  const [bills, setBills] = useState<any[]>([]);
-  const [legislators, setLegislators] = useState<any[]>([]);
+  const [bills, setBills] = useState<unknown[]>([]);
+  const [legislators, setLegislators] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch data on component mount
