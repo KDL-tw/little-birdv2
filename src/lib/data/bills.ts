@@ -1,4 +1,4 @@
-import { Bill, BillFilters, SearchParams, ApiResponse } from '@/lib/types';
+import { Bill, BillFilters, SearchParams } from '@/lib/types';
 
 /**
  * Bills data abstraction layer for Little Bird

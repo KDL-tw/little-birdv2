@@ -1,4 +1,4 @@
-import { Legislator, LegislatorFilters, SearchParams, ApiResponse } from '@/lib/types';
+import { Legislator, LegislatorFilters, SearchParams } from '@/lib/types';
 
 /**
  * Legislators data abstraction layer for Little Bird
@@ -184,7 +184,7 @@ export async function getLeadership(
 export async function getLegislatorVotingRecord(
   legislatorId: string,
   searchParams?: SearchParams
-): Promise<any[]> {
+): Promise<unknown[]> {
   console.log('getLegislatorVotingRecord called with:', { legislatorId, searchParams });
   console.log('Ready for API connection - Colorado General Assembly integration');
   
