@@ -2,13 +2,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Users, Search, Filter, MapPin, Building, Mail, Phone } from "lucide-react";
-import { fetchLegislators } from "@/lib/data/legislators";
+import { Users, Search, Filter, Building } from "lucide-react";
 import { Layout } from "@/components/layout";
 
-export default async function LegislatorsPage() {
-  // Fetch legislators data - will return empty array for now
-  const legislators = await fetchLegislators();
+export default function LegislatorsPage() {
+  // For now, we'll use empty array - data will be fetched client-side when needed
+  const legislators: unknown[] = [];
 
   return (
     <Layout>
@@ -72,109 +71,27 @@ export default async function LegislatorsPage() {
           </CardContent>
         </Card>
 
-        {/* Legislators Grid */}
-        {legislators.length === 0 ? (
-          <Card className="gov-card">
-            <CardContent className="gov-empty-state">
-              <Users className="gov-empty-state-icon" />
-              <h3 className="gov-empty-state-title">No Legislators Loaded</h3>
-              <p className="gov-empty-state-description">
-                Import data to start monitoring Colorado legislators. 
-                Use the admin panel to sync legislator information from official sources.
-              </p>
-              <div className="mt-6 space-x-4">
-                <Button className="gov-button-primary">
-                  <Users className="h-4 w-4 mr-2" />
-                  Go to Admin Panel
-                </Button>
-                <Button variant="outline" className="gov-button-secondary">
-                  <Building className="h-4 w-4 mr-2" />
-                  View Bills
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {legislators.map((legislator) => (
-              <Card key={legislator.id} className="gov-card hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{legislator.fullName}</CardTitle>
-                      <CardDescription className="mt-1">
-                        {legislator.party} • {legislator.chamber} District {legislator.district}
-                      </CardDescription>
-                    </div>
-                    <Badge 
-                      variant="outline" 
-                      className={`gov-status-badge ${
-                        legislator.isActive ? 'gov-status-active' : 'gov-status-inactive'
-                      }`}
-                    >
-                      {legislator.isActive ? 'Active' : 'Inactive'}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Building className="h-4 w-4 text-muted-foreground" />
-                      <span className="capitalize">{legislator.chamber}</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2 text-sm">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <span>District {legislator.district}</span>
-                    </div>
-                    
-                    {legislator.email && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
-                        <a 
-                          href={`mailto:${legislator.email}`}
-                          className="text-primary hover:underline"
-                        >
-                          {legislator.email}
-                        </a>
-                      </div>
-                    )}
-                    
-                    {legislator.phone && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
-                        <a 
-                          href={`tel:${legislator.phone}`}
-                          className="text-primary hover:underline"
-                        >
-                          {legislator.phone}
-                        </a>
-                      </div>
-                    )}
-                    
-                    {legislator.committeeAssignments.length > 0 && (
-                      <div className="pt-2 border-t border-border">
-                        <p className="text-xs text-muted-foreground mb-1">Committees:</p>
-                        <div className="flex flex-wrap gap-1">
-                          {legislator.committeeAssignments.slice(0, 2).map((committee, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {committee}
-                            </Badge>
-                          ))}
-                          {legislator.committeeAssignments.length > 2 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{legislator.committeeAssignments.length - 2} more
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+        {/* Legislators Grid - Empty State */}
+        <Card className="gov-card">
+          <CardContent className="gov-empty-state">
+            <Users className="gov-empty-state-icon" />
+            <h3 className="gov-empty-state-title">No Legislators Loaded</h3>
+            <p className="gov-empty-state-description">
+              Import data to start monitoring Colorado legislators. 
+              Use the admin panel to sync legislator information from official sources.
+            </p>
+            <div className="mt-6 space-x-4">
+              <Button className="gov-button-primary">
+                <Users className="h-4 w-4 mr-2" />
+                Go to Admin Panel
+              </Button>
+              <Button variant="outline" className="gov-button-secondary">
+                <Building className="h-4 w-4 mr-2" />
+                View Bills
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Loading State Example (commented out since we have empty state) */}
         {false && (

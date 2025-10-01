@@ -2,13 +2,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FileText, Search, Filter, Calendar, User, Building } from "lucide-react";
-import { fetchBills } from "@/lib/data/bills";
+import { FileText, Search, Filter, Calendar, User } from "lucide-react";
 import { Layout } from "@/components/layout";
 
-export default async function BillsPage() {
-  // Fetch bills data - will return empty array for now
-  const bills = await fetchBills();
+export default function BillsPage() {
+  // For now, we'll use empty array - data will be fetched client-side when needed
+  const bills: unknown[] = [];
 
   return (
     <Layout>
@@ -72,77 +71,27 @@ export default async function BillsPage() {
           </CardContent>
         </Card>
 
-        {/* Bills List */}
-        {bills.length === 0 ? (
-          <Card className="gov-card">
-            <CardContent className="gov-empty-state">
-              <FileText className="gov-empty-state-icon" />
-              <h3 className="gov-empty-state-title">No Bills Found</h3>
-              <p className="gov-empty-state-description">
-                Sync with Colorado General Assembly database to begin tracking bills. 
-                Use the admin panel to import bill data from official sources.
-              </p>
-              <div className="mt-6 space-x-4">
-                <Button className="gov-button-primary">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Go to Admin Panel
-                </Button>
-                <Button variant="outline" className="gov-button-secondary">
-                  <User className="h-4 w-4 mr-2" />
-                  View Legislators
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-4">
-            {bills.map((bill) => (
-              <Card key={bill.id} className="gov-card hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{bill.title}</CardTitle>
-                      <CardDescription className="mt-1">
-                        {bill.billNumber} • {bill.sponsor}
-                      </CardDescription>
-                    </div>
-                    <Badge 
-                      variant="outline" 
-                      className={`gov-status-badge ${
-                        bill.status === 'became_law' ? 'gov-status-active' :
-                        bill.status === 'vetoed' || bill.status === 'failed' ? 'gov-status-inactive' :
-                        'gov-status-pending'
-                      }`}
-                    >
-                      {bill.status.replace('_', ' ')}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Building className="h-4 w-4 text-muted-foreground" />
-                      <span className="capitalize">{bill.chamber}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
-                      <span>Introduced {new Date(bill.introducedDate).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <span>{bill.coSponsors.length} co-sponsors</span>
-                    </div>
-                  </div>
-                  {bill.description && (
-                    <p className="mt-4 text-sm text-muted-foreground line-clamp-2">
-                      {bill.description}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+        {/* Bills List - Empty State */}
+        <Card className="gov-card">
+          <CardContent className="gov-empty-state">
+            <FileText className="gov-empty-state-icon" />
+            <h3 className="gov-empty-state-title">No Bills Found</h3>
+            <p className="gov-empty-state-description">
+              Sync with Colorado General Assembly database to begin tracking bills. 
+              Use the admin panel to import bill data from official sources.
+            </p>
+            <div className="mt-6 space-x-4">
+              <Button className="gov-button-primary">
+                <Calendar className="h-4 w-4 mr-2" />
+                Go to Admin Panel
+              </Button>
+              <Button variant="outline" className="gov-button-secondary">
+                <User className="h-4 w-4 mr-2" />
+                View Legislators
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Loading State Example (commented out since we have empty state) */}
         {false && (
