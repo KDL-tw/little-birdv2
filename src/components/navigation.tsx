@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -13,7 +14,9 @@ import {
   Bell,
   Database,
   Settings,
-  BarChart3
+  BarChart3,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -36,24 +39,40 @@ const tools = [
 
 export function Navigation() {
   const pathname = usePathname();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <nav className="w-64 bg-slate-800 text-white h-full flex flex-col">
+    <nav className={cn(
+      "bg-indigo-900 text-white h-screen flex flex-col transition-all duration-300 ease-in-out",
+      isCollapsed ? "w-16" : "w-64"
+    )}>
       <div className="flex flex-col h-full">
         {/* Logo */}
-        <div className="flex items-center px-6 py-6 border-b border-slate-700">
+        <div className="flex items-center justify-between px-4 py-6 border-b border-indigo-800">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-sm">LB</span>
             </div>
-            <span className="text-white font-bold text-lg">
-              LITTLEBIRD
-            </span>
+            {!isCollapsed && (
+              <span className="text-white font-bold text-lg whitespace-nowrap">
+                LITTLEBIRD
+              </span>
+            )}
           </div>
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="p-1 rounded-lg hover:bg-indigo-800 transition-colors"
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </button>
         </div>
 
         {/* Main Navigation */}
-        <div className="flex-1 px-4 py-6">
+        <div className="flex-1 px-2 py-6">
           <ul className="space-y-1">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
@@ -62,14 +81,17 @@ export function Navigation() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                      "flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 group",
                       isActive
                         ? "bg-indigo-600 text-white shadow-sm"
-                        : "text-slate-300 hover:text-white hover:bg-slate-700"
+                        : "text-indigo-200 hover:text-white hover:bg-indigo-800"
                     )}
+                    title={isCollapsed ? item.name : undefined}
                   >
-                    <item.icon className="h-5 w-5 mr-3" />
-                    {item.name}
+                    <item.icon className="h-5 w-5 flex-shrink-0" />
+                    {!isCollapsed && (
+                      <span className="ml-3 whitespace-nowrap">{item.name}</span>
+                    )}
                   </Link>
                 </li>
               );
@@ -78,9 +100,11 @@ export function Navigation() {
 
           {/* Tools Section */}
           <div className="mt-8">
-            <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-              TOOLS
-            </h3>
+            {!isCollapsed && (
+              <h3 className="px-3 text-xs font-semibold text-indigo-300 uppercase tracking-wider mb-3">
+                TOOLS
+              </h3>
+            )}
             <ul className="space-y-1">
               {tools.map((item) => {
                 const isActive = pathname === item.href;
@@ -89,14 +113,17 @@ export function Navigation() {
                     <Link
                       href={item.href}
                       className={cn(
-                        "flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                        "flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 group",
                         isActive
                           ? "bg-indigo-600 text-white shadow-sm"
-                          : "text-slate-300 hover:text-white hover:bg-slate-700"
+                          : "text-indigo-200 hover:text-white hover:bg-indigo-800"
                       )}
+                      title={isCollapsed ? item.name : undefined}
                     >
-                      <item.icon className="h-5 w-5 mr-3" />
-                      {item.name}
+                      <item.icon className="h-5 w-5 flex-shrink-0" />
+                      {!isCollapsed && (
+                        <span className="ml-3 whitespace-nowrap">{item.name}</span>
+                      )}
                     </Link>
                   </li>
                 );
@@ -106,10 +133,12 @@ export function Navigation() {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-slate-700">
-          <div className="text-slate-400 text-xs">
-            Little Bird v1.0
-          </div>
+        <div className="px-4 py-4 border-t border-indigo-800">
+          {!isCollapsed && (
+            <div className="text-indigo-300 text-xs">
+              Little Bird v1.0
+            </div>
+          )}
         </div>
       </div>
     </nav>
