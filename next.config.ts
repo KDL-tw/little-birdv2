@@ -1,8 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Ensure proper static generation
-  trailingSlash: false,
+  // Basic configuration for Vercel
 };
 
 export default nextConfig;
