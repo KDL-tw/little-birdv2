@@ -1,4 +1,4 @@
-import { Bill, BillProgress, FiscalNote, BillNote } from '../types';
+import { Bill } from '../types';
 
 // Sample bill data for HB00-000 "Littlebird Users Bill"
 export const sampleBill: Bill = {

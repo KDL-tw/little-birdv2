@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Users, TrendingUp, Clock, Building2, Target, BarChart3 } from "lucide-react";
+import { FileText, TrendingUp, Building2, Target, BarChart3 } from "lucide-react";
 import { Layout } from "@/components/layout";
 
 export default function Home() {

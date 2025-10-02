@@ -4,11 +4,10 @@ import { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,8 +20,6 @@ import {
 } from "@/components/ui/select";
 import {
   FileText,
-  Calendar,
-  User,
   Building2,
   DollarSign,
   Target,
@@ -232,7 +229,7 @@ export function BillProfileModal({ bill, open, onOpenChange, onPositionChange }:
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {bill.fiscalNoteHistory.map((note, index) => (
+                  {bill.fiscalNoteHistory.map((note) => (
                     <div key={note.id} className="p-3 bg-amber-50 rounded-lg border border-amber-200">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium text-amber-900">
@@ -261,7 +258,7 @@ export function BillProfileModal({ bill, open, onOpenChange, onPositionChange }:
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {bill.progress.map((progress, index) => (
+                {bill.progress.map((progress) => (
                   <div key={progress.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
                     <div className="flex-shrink-0 mt-1">
                       <CheckCircle className="h-4 w-4 text-green-600" />
