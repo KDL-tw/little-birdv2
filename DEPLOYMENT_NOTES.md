@@ -22,6 +22,25 @@ export type ComponentProps = SomeType
 2. **Unused parameters**: Remove unused `index` parameters in map functions  
 3. **Empty interfaces**: Use type aliases instead of empty interfaces
 4. **Missing imports**: Ensure all used components are properly imported
+5. **Missing object properties**: When using dynamic object access, ensure all possible keys exist in the object
+
+## TypeScript Index Error Fix
+
+**Problem**: `Element implicitly has an 'any' type because expression of type 'X' can't be used to index type 'Y'`
+
+**Solution**: Add missing properties to the object being indexed:
+
+```typescript
+// ❌ This causes TypeScript error:
+const colors = { red: "red", blue: "blue" };
+const color = colors[someVariable]; // Error if someVariable could be "green"
+
+// ✅ Fix by adding all possible keys:
+const colors = { red: "red", blue: "blue", green: "green" };
+const color = colors[someVariable]; // Now works for all possible values
+```
+
+**Example**: Fixed `partyColors` object in legislator-profile-modal.tsx by adding `swing` property
 
 ## Data Connection Notes
 
