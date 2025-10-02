@@ -5,6 +5,7 @@ export interface Bill {
   title: string;
   description: string;
   billNumber: string;
+  billType: BillType;
   status: BillStatus;
   sponsor: string;
   coSponsors: string[];
@@ -12,13 +13,47 @@ export interface Bill {
   lastActionDate: string;
   chamber: Chamber;
   committee?: string;
-  fiscalNote?: string;
+  fiscalNote?: FiscalNote;
+  fiscalNoteHistory?: FiscalNote[];
   summary?: string;
   fullText?: string;
   tags: string[];
+  issue: string;
   relatedBills?: string[];
   lobbyingActivity?: LobbyingActivity[];
   votes?: Vote[];
+  progress: BillProgress[];
+  clientId?: string;
+  position?: LobbyingPosition;
+  notes?: BillNote[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FiscalNote {
+  id: string;
+  billId: string;
+  amount?: number;
+  description: string;
+  effectiveDate: string;
+  agency: string;
+  createdAt: string;
+}
+
+export interface BillProgress {
+  id: string;
+  billId: string;
+  stage: BillStatus;
+  date: string;
+  description: string;
+  chamber: Chamber;
+}
+
+export interface BillNote {
+  id: string;
+  billId: string;
+  content: string;
+  author: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -147,6 +182,21 @@ export type ClientType =
   | 'government_entity'
   | 'individual'
   | 'other';
+
+export type BillType = 
+  | 'house_bill'
+  | 'senate_bill'
+  | 'house_joint_resolution'
+  | 'senate_joint_resolution'
+  | 'house_concurrent_resolution'
+  | 'senate_concurrent_resolution';
+
+export type LobbyingPosition = 
+  | 'support'
+  | 'oppose'
+  | 'monitor'
+  | 'neutral'
+  | 'amend';
 
 // Filter and search types
 export interface BillFilters {

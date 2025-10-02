@@ -1,13 +1,45 @@
+"use client";
+
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FileText, Search, Filter, Calendar, User } from "lucide-react";
+import { FileText, Search, Filter, Calendar, User, Plus, Upload } from "lucide-react";
 import { Layout } from "@/components/layout";
+import { BillCard } from "@/components/bill-card";
+import { Bill, LobbyingPosition } from "@/lib/types";
+import { sampleBills } from "@/lib/data/sampleData";
 
 export default function BillsPage() {
-  // For now, we'll use empty array - data will be fetched client-side when needed
-  const bills: unknown[] = [];
+  const [bills, setBills] = useState<Bill[]>(sampleBills);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isImporting, setIsImporting] = useState(false);
+
+  const handleDeleteBill = (billId: string) => {
+    setBills(bills.filter(bill => bill.id !== billId));
+  };
+
+  const handlePositionChange = (billId: string, position: LobbyingPosition) => {
+    setBills(bills.map(bill => 
+      bill.id === billId ? { ...bill, position } : bill
+    ));
+  };
+
+  const handleImportBill = () => {
+    setIsImporting(true);
+    // Simulate import process
+    setTimeout(() => {
+      console.log('Import bill functionality - Ready for API connection');
+      setIsImporting(false);
+    }, 2000);
+  };
+
+  const filteredBills = bills.filter(bill =>
+    bill.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    bill.billNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    bill.sponsor.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Layout>
@@ -24,9 +56,28 @@ export default function BillsPage() {
               Track and monitor Colorado General Assembly legislation
             </p>
           </div>
-          <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
-            {bills.length} bills loaded
-          </Badge>
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
+              {bills.length} bills loaded
+            </Badge>
+            <Button 
+              onClick={handleImportBill}
+              disabled={isImporting}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
+              {isImporting ? (
+                <>
+                  <Upload className="h-4 w-4 mr-2 animate-spin" />
+                  Importing...
+                </>
+              ) : (
+                <>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Import Bill
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -51,6 +102,8 @@ export default function BillsPage() {
                   <input
                     type="text"
                     placeholder="Search bills by title, number, or sponsor..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 border border-input rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
@@ -69,27 +122,58 @@ export default function BillsPage() {
           </CardContent>
         </Card>
 
-        {/* Bills List - Empty State */}
-        <Card className="gov-card">
-          <CardContent className="gov-empty-state">
-            <FileText className="gov-empty-state-icon" />
-            <h3 className="gov-empty-state-title">No Bills Found</h3>
-            <p className="gov-empty-state-description">
-              Sync with Colorado General Assembly database to begin tracking bills. 
-              Use the admin panel to import bill data from official sources.
-            </p>
-            <div className="mt-6 space-x-4">
-              <Button className="gov-button-primary">
-                <Calendar className="h-4 w-4 mr-2" />
-                Go to Admin Panel
+        {/* Bills List */}
+        {filteredBills.length > 0 ? (
+          <div className="space-y-4">
+            {filteredBills.map((bill) => (
+              <BillCard
+                key={bill.id}
+                bill={bill}
+                onDelete={handleDeleteBill}
+                onPositionChange={handlePositionChange}
+              />
+            ))}
+          </div>
+        ) : bills.length > 0 ? (
+          // No search results
+          <Card className="gov-card">
+            <CardContent className="gov-empty-state">
+              <Search className="gov-empty-state-icon" />
+              <h3 className="gov-empty-state-title">No Bills Match Your Search</h3>
+              <p className="gov-empty-state-description">
+                Try adjusting your search terms or clear the search to see all bills.
+              </p>
+              <Button 
+                onClick={() => setSearchTerm("")}
+                className="mt-4 gov-button-primary"
+              >
+                Clear Search
               </Button>
-              <Button variant="outline" className="gov-button-secondary">
-                <User className="h-4 w-4 mr-2" />
-                View Legislators
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          // No bills at all
+          <Card className="gov-card">
+            <CardContent className="gov-empty-state">
+              <FileText className="gov-empty-state-icon" />
+              <h3 className="gov-empty-state-title">No Bills Found</h3>
+              <p className="gov-empty-state-description">
+                Sync with Colorado General Assembly database to begin tracking bills. 
+                Use the admin panel to import bill data from official sources.
+              </p>
+              <div className="mt-6 space-x-4">
+                <Button className="gov-button-primary">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Go to Admin Panel
+                </Button>
+                <Button variant="outline" className="gov-button-secondary">
+                  <User className="h-4 w-4 mr-2" />
+                  View Legislators
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Loading State Example (commented out since we have empty state) */}
         {false && (
