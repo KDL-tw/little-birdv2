@@ -173,6 +173,28 @@ export interface Client {
   contactInfo?: ContactInfo;
   lobbyists: string[];
   billsLobbying: string[];
+  // Company details
+  companySize?: 'startup' | 'small' | 'medium' | 'large' | 'enterprise';
+  foundedYear?: number;
+  headquarters?: string;
+  website?: string;
+  socialMedia?: SocialMedia;
+  // User-specific data (100% local)
+  userNotes?: ClientNote[];
+  userTags?: string[];
+  userPriority?: 'high' | 'medium' | 'low';
+  userStatus?: 'active' | 'inactive' | 'prospect' | 'former';
+  userRelationship?: 'strategic' | 'standard' | 'minimal' | 'problematic';
+  userValue?: 'high' | 'medium' | 'low';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ClientNote {
+  id: string;
+  clientId: string;
+  content: string;
+  author: string;
   createdAt: string;
   updatedAt: string;
 }
