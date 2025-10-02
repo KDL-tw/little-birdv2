@@ -9,9 +9,7 @@ import {
   Calendar, 
   User, 
   Building2, 
-  DollarSign, 
   Trash2,
-  Eye,
   Target,
   AlertTriangle
 } from "lucide-react";
@@ -92,22 +90,20 @@ export function BillCard({ bill, onDelete, onPositionChange }: BillCardProps) {
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <CardTitle className="text-lg font-semibold text-gray-900 mb-2">
+              <CardTitle 
+                className="text-lg font-semibold text-gray-900 mb-2 cursor-pointer hover:text-indigo-600 transition-colors"
+                onClick={() => setShowProfile(true)}
+              >
                 {bill.billNumber}: {bill.title}
               </CardTitle>
-              <CardDescription className="text-gray-600 line-clamp-2">
+              <CardDescription 
+                className="text-gray-600 line-clamp-2 cursor-pointer hover:text-indigo-600 transition-colors"
+                onClick={() => setShowProfile(true)}
+              >
                 {bill.description}
               </CardDescription>
             </div>
             <div className="flex items-center gap-2 ml-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowProfile(true)}
-                className="h-8 w-8 p-0"
-              >
-                <Eye className="h-4 w-4" />
-              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -152,18 +148,6 @@ export function BillCard({ bill, onDelete, onPositionChange }: BillCardProps) {
             </Badge>
           </div>
 
-          {/* Fiscal Note */}
-          {bill.fiscalNote && (
-            <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
-              <DollarSign className="h-4 w-4 text-amber-600" />
-              <div className="flex-1">
-                <span className="text-sm font-medium text-amber-900">
-                  Fiscal Note: {formatCurrency(bill.fiscalNote.amount || 0)}
-                </span>
-                <p className="text-xs text-amber-700 mt-1">{bill.fiscalNote.description}</p>
-              </div>
-            </div>
-          )}
 
           {/* Position and Client */}
           <div className="flex items-center justify-between pt-2 border-t border-gray-100">
