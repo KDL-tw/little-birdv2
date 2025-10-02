@@ -225,7 +225,7 @@ export function BillProfileModal({ bill, open, onOpenChange, onPositionChange }:
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <DollarSign className="h-5 w-5" />
-                  Fiscal Note History
+                  Fiscal Notes
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -239,9 +239,18 @@ export function BillProfileModal({ bill, open, onOpenChange, onPositionChange }:
                         <span className="text-sm text-amber-700">{note.agency}</span>
                       </div>
                       <p className="text-sm text-amber-800">{note.description}</p>
-                      <p className="text-xs text-amber-600 mt-1">
-                        Effective: {formatDate(note.effectiveDate)}
-                      </p>
+                      <div className="flex items-center justify-between mt-2">
+                        <p className="text-xs text-amber-600">
+                          Effective: {formatDate(note.effectiveDate)}
+                        </p>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="text-xs h-6 px-2 text-amber-700 border-amber-300 hover:bg-amber-100"
+                        >
+                          View Fiscal Note
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -158,7 +158,7 @@ export function BillCard({ bill, onDelete, onPositionChange }: BillCardProps) {
               <DollarSign className="h-4 w-4 text-amber-600" />
               <div className="flex-1">
                 <span className="text-sm font-medium text-amber-900">
-                  Fiscal Impact: {formatCurrency(bill.fiscalNote.amount || 0)}
+                  Fiscal Note: {formatCurrency(bill.fiscalNote.amount || 0)}
                 </span>
                 <p className="text-xs text-amber-700 mt-1">{bill.fiscalNote.description}</p>
               </div>
