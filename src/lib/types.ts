@@ -125,7 +125,7 @@ export interface DistrictData {
   };
   keyIndustries: string[];
   majorEmployers: string[];
-  politicalLean: 'democratic' | 'republican' | 'swing' | 'independent';
+  politicalLean: 'democrat' | 'republican' | 'swing' | 'independent';
   lastUpdated: string;
 }
 

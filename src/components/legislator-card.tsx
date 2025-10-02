@@ -11,7 +11,6 @@ import {
   MapPin, 
   Trash2,
   AlertTriangle,
-  Building2,
   Calendar
 } from "lucide-react";
 import { Legislator } from "@/lib/types";

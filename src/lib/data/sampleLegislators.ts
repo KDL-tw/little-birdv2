@@ -75,7 +75,7 @@ export const sampleLegislator: Legislator = {
     },
     keyIndustries: ['Technology', 'Healthcare', 'Education', 'Manufacturing'],
     majorEmployers: ['TechCorp Colorado', 'Denver Health', 'University of Colorado'],
-    politicalLean: 'democratic',
+    politicalLean: 'democrat',
     lastUpdated: '2025-01-15T10:00:00Z'
   },
   createdAt: '2025-01-15T08:00:00Z',

@@ -25,17 +25,15 @@ import {
   Phone,
   MapPin,
   Building2,
-  Calendar,
   MessageSquare,
   Brain,
   BarChart3,
   Users,
-  TrendingUp,
   Target,
   FileText,
   Globe
 } from "lucide-react";
-import { Legislator, LegislatorNote } from "@/lib/types";
+import { Legislator } from "@/lib/types";
 
 interface LegislatorProfileModalProps {
   legislator: Legislator;
