@@ -1,13 +1,42 @@
+"use client";
+
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Users, Search, Filter, Building } from "lucide-react";
+import { Users, Search, Filter, Building, Plus, Upload } from "lucide-react";
 import { Layout } from "@/components/layout";
+import { LegislatorCard } from "@/components/legislator-card";
+import { Legislator } from "@/lib/types";
+import { sampleLegislators } from "@/lib/data/sampleLegislators";
 
 export default function LegislatorsPage() {
-  // For now, we'll use empty array - data will be fetched client-side when needed
-  const legislators: unknown[] = [];
+  const [legislators, setLegislators] = useState<Legislator[]>(sampleLegislators);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isImporting, setIsImporting] = useState(false);
+
+  const handleDeleteLegislator = (legislatorId: string) => {
+    setLegislators(legislators.filter(legislator => legislator.id !== legislatorId));
+  };
+
+  const handleImportLegislator = () => {
+    setIsImporting(true);
+    // Simulate import process
+    setTimeout(() => {
+      console.log('Import legislator functionality - Ready for API connection');
+      setIsImporting(false);
+    }, 2000);
+  };
+
+  const filteredLegislators = legislators.filter(legislator =>
+    legislator.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    legislator.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    legislator.party.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    legislator.committeeAssignments.some(committee => 
+      committee.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   return (
     <Layout>
@@ -24,9 +53,28 @@ export default function LegislatorsPage() {
               Monitor Colorado General Assembly members and voting records
             </p>
           </div>
-          <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
-            {legislators.length} legislators loaded
-          </Badge>
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
+              {legislators.length} legislators loaded
+            </Badge>
+            <Button 
+              onClick={handleImportLegislator}
+              disabled={isImporting}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
+              {isImporting ? (
+                <>
+                  <Upload className="h-4 w-4 mr-2 animate-spin" />
+                  Importing...
+                </>
+              ) : (
+                <>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Import Legislator
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -51,6 +99,8 @@ export default function LegislatorsPage() {
                   <input
                     type="text"
                     placeholder="Search legislators by name, district, or party..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 border border-input rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
@@ -69,27 +119,57 @@ export default function LegislatorsPage() {
           </CardContent>
         </Card>
 
-        {/* Legislators Grid - Empty State */}
-        <Card className="gov-card">
-          <CardContent className="gov-empty-state">
-            <Users className="gov-empty-state-icon" />
-            <h3 className="gov-empty-state-title">No Legislators Loaded</h3>
-            <p className="gov-empty-state-description">
-              Import data to start monitoring Colorado legislators. 
-              Use the admin panel to sync legislator information from official sources.
-            </p>
-            <div className="mt-6 space-x-4">
-              <Button className="gov-button-primary">
-                <Users className="h-4 w-4 mr-2" />
-                Go to Admin Panel
+        {/* Legislators Roster */}
+        {filteredLegislators.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredLegislators.map((legislator) => (
+              <LegislatorCard
+                key={legislator.id}
+                legislator={legislator}
+                onDelete={handleDeleteLegislator}
+              />
+            ))}
+          </div>
+        ) : legislators.length > 0 ? (
+          // No search results
+          <Card className="gov-card">
+            <CardContent className="gov-empty-state">
+              <Search className="gov-empty-state-icon" />
+              <h3 className="gov-empty-state-title">No Legislators Match Your Search</h3>
+              <p className="gov-empty-state-description">
+                Try adjusting your search terms or clear the search to see all legislators.
+              </p>
+              <Button 
+                onClick={() => setSearchTerm("")}
+                className="mt-4 gov-button-primary"
+              >
+                Clear Search
               </Button>
-              <Button variant="outline" className="gov-button-secondary">
-                <Building className="h-4 w-4 mr-2" />
-                View Bills
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          // No legislators at all
+          <Card className="gov-card">
+            <CardContent className="gov-empty-state">
+              <Users className="gov-empty-state-icon" />
+              <h3 className="gov-empty-state-title">No Legislators Loaded</h3>
+              <p className="gov-empty-state-description">
+                Import data to start monitoring Colorado legislators. 
+                Use the admin panel to sync legislator information from official sources.
+              </p>
+              <div className="mt-6 space-x-4">
+                <Button className="gov-button-primary">
+                  <Users className="h-4 w-4 mr-2" />
+                  Go to Admin Panel
+                </Button>
+                <Button variant="outline" className="gov-button-secondary">
+                  <Building className="h-4 w-4 mr-2" />
+                  View Bills
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Loading State Example (commented out since we have empty state) */}
         {false && (

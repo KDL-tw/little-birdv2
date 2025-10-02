@@ -80,8 +80,53 @@ export interface Legislator {
   termStart: string;
   termEnd?: string;
   isActive: boolean;
+  // User-specific data (not in central DB)
+  userNotes?: LegislatorNote[];
+  userTags?: string[];
+  userPriority?: 'high' | 'medium' | 'low';
+  userRelationship?: 'ally' | 'neutral' | 'opponent' | 'unknown';
+  // Intelligence dashboard data
+  psychographics?: Psychographics;
+  districtData?: DistrictData;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface LegislatorNote {
+  id: string;
+  legislatorId: string;
+  content: string;
+  author: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Psychographics {
+  id: string;
+  legislatorId: string;
+  communicationStyle?: 'direct' | 'diplomatic' | 'analytical' | 'relationship-focused';
+  decisionMakingStyle?: 'data-driven' | 'consensus-based' | 'authoritative' | 'collaborative';
+  keyIssues?: string[];
+  personalityTraits?: string[];
+  communicationPreferences?: string[];
+  lastUpdated: string;
+}
+
+export interface DistrictData {
+  id: string;
+  legislatorId: string;
+  districtNumber: string;
+  population: number;
+  demographics: {
+    medianAge: number;
+    medianIncome: number;
+    educationLevel: string;
+    urbanRural: 'urban' | 'suburban' | 'rural' | 'mixed';
+  };
+  keyIndustries: string[];
+  majorEmployers: string[];
+  politicalLean: 'democratic' | 'republican' | 'swing' | 'independent';
+  lastUpdated: string;
 }
 
 export interface LobbyingActivity {
