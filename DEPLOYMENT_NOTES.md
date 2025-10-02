@@ -42,6 +42,22 @@ const color = colors[someVariable]; // Now works for all possible values
 
 **Example**: Fixed `partyColors` object in legislator-profile-modal.tsx by adding `swing` property
 
+## TypeScript Select Component Error Fix
+
+**Problem**: `Type 'Dispatch<SetStateAction<"X" | "Y" | "Z">>' is not assignable to type '(value: string) => void'`
+
+**Solution**: Use type assertion in the onValueChange handler:
+
+```typescript
+// ❌ This causes TypeScript error:
+<Select value={state} onValueChange={setState}>
+
+// ✅ Fix with type assertion:
+<Select value={state} onValueChange={(value) => setState(value as 'X' | 'Y' | 'Z')}>
+```
+
+**Example**: Fixed Select components in legislator-profile-modal.tsx for userPriority and userRelationship
+
 ## Data Connection Notes
 
 - Bills data will come from internal simple database, not API calls

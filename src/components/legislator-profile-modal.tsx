@@ -290,7 +290,7 @@ export function LegislatorProfileModal({ legislator, open, onOpenChange }: Legis
               <CardContent className="space-y-4">
                 <div>
                   <label className="text-sm text-gray-500">Priority Level</label>
-                  <Select value={userPriority} onValueChange={setUserPriority}>
+                  <Select value={userPriority} onValueChange={(value) => setUserPriority(value as 'high' | 'medium' | 'low')}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -303,7 +303,7 @@ export function LegislatorProfileModal({ legislator, open, onOpenChange }: Legis
                 </div>
                 <div>
                   <label className="text-sm text-gray-500">Relationship</label>
-                  <Select value={userRelationship} onValueChange={setUserRelationship}>
+                  <Select value={userRelationship} onValueChange={(value) => setUserRelationship(value as 'ally' | 'neutral' | 'opponent' | 'unknown')}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
