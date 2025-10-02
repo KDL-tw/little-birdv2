@@ -199,6 +199,66 @@ export interface ClientNote {
   updatedAt: string;
 }
 
+export interface Contact {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  title?: string;
+  email?: string;
+  phone?: string;
+  mobile?: string;
+  address?: string;
+  // Organization relationships (edge/node data)
+  clientId?: string; // If they work for a client
+  legislatorId?: string; // If they work for a legislator
+  organizationType?: 'client' | 'legislator' | 'government' | 'other';
+  organizationName?: string; // For non-client/legislator organizations
+  // Role and relationship data
+  role?: string; // Their position/title within the organization
+  relationshipType?: 'primary' | 'secondary' | 'assistant' | 'decision_maker' | 'influencer' | 'gatekeeper';
+  // User-specific data (100% local)
+  userNotes?: ContactNote[];
+  userTags?: string[];
+  userPriority?: 'high' | 'medium' | 'low';
+  userStatus?: 'active' | 'inactive' | 'former' | 'prospect';
+  userRelationship?: 'key_contact' | 'regular' | 'minimal' | 'problematic';
+  // Social network data for future AI analysis
+  connections?: ContactConnection[];
+  influence?: ContactInfluence;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ContactNote {
+  id: string;
+  contactId: string;
+  content: string;
+  author: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ContactConnection {
+  id: string;
+  contactId: string;
+  connectedContactId: string;
+  connectionType: 'colleague' | 'supervisor' | 'subordinate' | 'peer' | 'external';
+  relationshipStrength: 'strong' | 'medium' | 'weak';
+  description?: string;
+  createdAt: string;
+}
+
+export interface ContactInfluence {
+  id: string;
+  contactId: string;
+  influenceLevel: 'high' | 'medium' | 'low';
+  decisionMakingPower: 'high' | 'medium' | 'low';
+  accessLevel: 'direct' | 'indirect' | 'limited';
+  keyInfluenceAreas: string[];
+  lastUpdated: string;
+}
+
 export interface ContactInfo {
   email?: string;
   phone?: string;
