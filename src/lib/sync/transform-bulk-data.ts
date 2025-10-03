@@ -132,13 +132,13 @@ function calculateDataFreshness(updatedAt: string): number {
 /**
  * Safely handles JSONB fields with null/undefined protection
  */
-function createJsonbField(data: unknown): Record<string, unknown> {
+function createJsonbField(data: unknown): Json {
   if (data === null || data === undefined) {
     return {};
   }
   
   if (typeof data === 'object' && !Array.isArray(data)) {
-    return data as Record<string, unknown>;
+    return data as Json;
   }
   
   // Try to parse if it's a string
@@ -146,7 +146,7 @@ function createJsonbField(data: unknown): Record<string, unknown> {
     try {
       const parsed = JSON.parse(data);
       if (typeof parsed === 'object' && !Array.isArray(parsed)) {
-        return parsed as Record<string, unknown>;
+        return parsed as Json;
       }
       return {};
     } catch {
