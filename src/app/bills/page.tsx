@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,66 @@ import { Layout } from "@/components/layout";
 import { BillCard } from "@/components/bill-card";
 import { Bill, LobbyingPosition } from "@/lib/types";
 import { sampleBills } from "@/lib/data/sampleData";
+import { getBills } from "@/lib/openstates";
 
 export default function BillsPage() {
   const [bills, setBills] = useState<Bill[]>(sampleBills);
   const [searchTerm, setSearchTerm] = useState("");
   const [isImporting, setIsImporting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load bills from Supabase on component mount
+  useEffect(() => {
+    const loadBills = async () => {
+      try {
+        const supabaseBills = await getBills(50, 0);
+        
+        // Convert Supabase bills to our Bill type
+        const convertedBills = supabaseBills.map((sb: any) => ({
+          id: sb.id,
+          billNumber: sb.bill_number,
+          title: sb.title,
+          description: sb.description || '',
+          status: sb.status,
+          chamber: sb.chamber,
+          sponsor: sb.sponsor_names?.[0] || 'Unknown',
+          coSponsors: sb.sponsor_names?.slice(1) || [],
+          introducedDate: sb.created_at,
+          lastActionDate: sb.updated_at,
+          fiscalNote: sb.fiscal_note || '',
+          position: 'neutral' as LobbyingPosition,
+          clientId: null,
+          notes: [],
+          tags: sb.subject || [],
+          issue: sb.subject?.[0] || 'General',
+          progress: {
+            currentStage: sb.status,
+            stages: [
+              { name: 'Introduced', completed: true, date: sb.created_at },
+              { name: 'Committee', completed: false },
+              { name: 'Floor Vote', completed: false },
+              { name: 'Governor', completed: false }
+            ]
+          }
+        }));
+
+        // Combine with sample bills if no real data yet
+        if (convertedBills.length > 0) {
+          setBills(convertedBills);
+        } else {
+          setBills(sampleBills);
+        }
+      } catch (error) {
+        console.error('Error loading bills:', error);
+        // Fall back to sample bills
+        setBills(sampleBills);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBills();
+  }, []);
 
   const handleDeleteBill = (billId: string) => {
     setBills(bills.filter(bill => bill.id !== billId));

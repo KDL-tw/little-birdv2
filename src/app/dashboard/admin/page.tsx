@@ -17,20 +17,33 @@ import {
 import { fetchBills, fetchLegislators } from "@/lib/data";
 import { Layout } from "@/components/layout";
 import { useState, useEffect } from "react";
+import { syncBillsFromOpenStates, getRecentSyncRuns, getBillCount } from "@/lib/openstates";
 
 export default function AdminPage() {
   // State for data counts
-  const [bills, setBills] = useState<unknown[]>([]);
+  const [billCount, setBillCount] = useState<number>(0);
   const [legislators, setLegislators] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lastSync, setLastSync] = useState<string>('Never');
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'running' | 'success' | 'error'>('idle');
+  const [syncMessage, setSyncMessage] = useState<string>('');
 
   // Fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const billsData = await fetchBills();
+        // Get bill count from Supabase
+        const count = await getBillCount();
+        setBillCount(count);
+        
+        // Get last sync info
+        const syncRuns = await getRecentSyncRuns(1);
+        if (syncRuns.length > 0) {
+          const lastRun = syncRuns[0];
+          setLastSync(new Date(lastRun.started_at).toLocaleString());
+        }
+
         const legislatorsData = await fetchLegislators();
-        setBills(billsData);
         setLegislators(legislatorsData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -43,14 +56,33 @@ export default function AdminPage() {
   }, []);
 
   // Handler functions for sync buttons
-  const handleSyncBills = () => {
-    console.log('Ready for API connection - Colorado General Assembly integration');
-    console.log('fetchBills() called from admin panel');
+  const handleSyncBills = async () => {
+    try {
+      setSyncStatus('running');
+      setSyncMessage('Connecting to OpenStates API...');
+      
+      const result = await syncBillsFromOpenStates();
+      
+      if (result.success) {
+        setSyncStatus('success');
+        setSyncMessage(`Successfully synced ${result.billsProcessed} bills from OpenStates`);
+        setBillCount(result.billsProcessed);
+        setLastSync(new Date().toLocaleString());
+      } else {
+        setSyncStatus('error');
+        setSyncMessage(`Sync failed: ${result.errors.length} errors occurred`);
+      }
+    } catch (error) {
+      setSyncStatus('error');
+      setSyncMessage(`Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Sync error:', error);
+    }
   };
 
   const handleSyncLegislators = () => {
-    console.log('Ready for API connection - Colorado General Assembly integration');
-    console.log('fetchLegislators() called from admin panel');
+    setSyncStatus('idle');
+    setSyncMessage('Legislator sync not yet implemented - coming soon!');
+    // TODO: Implement legislator sync when OpenStates legislator endpoints are ready
   };
 
   if (loading) {
@@ -112,30 +144,43 @@ export default function AdminPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium">Current Records</p>
-                    <p className="text-2xl font-bold">{bills.length}</p>
+                    <p className="text-2xl font-bold">{billCount}</p>
                   </div>
                   <Badge 
                     variant="outline" 
                     className={`gov-status-badge ${
-                      bills.length > 0 ? 'gov-status-active' : 'gov-status-inactive'
+                      billCount > 0 ? 'gov-status-active' : 'gov-status-inactive'
                     }`}
                   >
-                    {bills.length > 0 ? 'Synced' : 'Empty'}
+                    {billCount > 0 ? 'Synced' : 'Empty'}
                   </Badge>
                 </div>
                 
                 <div className="space-y-2">
-                  <p className="text-xs text-muted-foreground">Last Sync: Never</p>
-                  <p className="text-xs text-muted-foreground">Status: Ready for API connection</p>
+                  <p className="text-xs text-muted-foreground">Last Sync: {lastSync}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Status: {syncStatus === 'running' ? 'Syncing...' : syncStatus === 'success' ? 'Connected' : 'Ready'}
+                  </p>
                 </div>
                 
                 <Button 
                   className="w-full gov-button-primary"
                   onClick={handleSyncBills}
+                  disabled={syncStatus === 'running'}
                 >
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Sync Colorado Bills
+                  <RefreshCw className={`h-4 w-4 mr-2 ${syncStatus === 'running' ? 'animate-spin' : ''}`} />
+                  {syncStatus === 'running' ? 'Syncing...' : 'Sync Colorado Bills'}
                 </Button>
+                
+                {syncMessage && (
+                  <div className={`p-3 rounded text-sm ${
+                    syncStatus === 'success' ? 'bg-green-100 text-green-800' :
+                    syncStatus === 'error' ? 'bg-red-100 text-red-800' :
+                    'bg-blue-100 text-blue-800'
+                  }`}>
+                    {syncMessage}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
