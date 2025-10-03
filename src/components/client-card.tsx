@@ -10,7 +10,8 @@ import {
   Phone, 
   MapPin, 
   Trash2,
-  AlertTriangle
+  AlertTriangle,
+  Calendar
 } from "lucide-react";
 import { Client } from "@/lib/types";
 import { ClientProfileModal } from "./client-profile-modal";
