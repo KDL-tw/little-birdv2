@@ -100,8 +100,8 @@ export default function SettingsPage() {
       try {
         const parsed = JSON.parse(savedSettings);
         setSettings({ ...defaultSettings, ...parsed });
-      } catch (error) {
-        console.error('Error parsing saved settings:', error);
+      } catch {
+        console.error('Error parsing saved settings');
       }
     }
   }, []);
@@ -346,7 +346,7 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <label className="text-sm text-gray-500">Reminder Frequency</label>
-                  <Select value={settings.reminderFrequency} onValueChange={(value) => updateSetting('reminderFrequency', value as any)}>
+                  <Select value={settings.reminderFrequency} onValueChange={(value) => updateSetting('reminderFrequency', value as 'immediate' | 'daily' | 'weekly')}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -373,7 +373,7 @@ export default function SettingsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm text-gray-500">Theme</label>
-                    <Select value={settings.theme} onValueChange={(value) => updateSetting('theme', value as any)}>
+                    <Select value={settings.theme} onValueChange={(value) => updateSetting('theme', value as 'light' | 'dark' | 'auto')}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -386,7 +386,7 @@ export default function SettingsPage() {
                   </div>
                   <div>
                     <label className="text-sm text-gray-500">Default View</label>
-                    <Select value={settings.defaultView} onValueChange={(value) => updateSetting('defaultView', value as any)}>
+                    <Select value={settings.defaultView} onValueChange={(value) => updateSetting('defaultView', value as 'dashboard' | 'bills' | 'legislators' | 'clients')}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -453,7 +453,7 @@ export default function SettingsPage() {
                   </div>
                   <div>
                     <label className="text-sm text-gray-500">Export Format</label>
-                    <Select value={settings.exportFormat} onValueChange={(value) => updateSetting('exportFormat', value as any)}>
+                    <Select value={settings.exportFormat} onValueChange={(value) => updateSetting('exportFormat', value as 'csv' | 'json' | 'pdf')}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
