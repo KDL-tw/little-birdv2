@@ -183,8 +183,8 @@ function transformSingleBill(openstatesBill: OpenStatesBill): BillInsert {
         names: sponsorNames,
         count: sponsorNames.length,
         primary: sponsorNames[0] || null,
-        details: openstatesBill.sponsorships || []
-      },
+        details: JSON.parse(JSON.stringify(openstatesBill.sponsorships || []))
+      } as any,
       actions: createJsonbField(openstatesBill.actions),
       votes: createJsonbField(openstatesBill.votes),
       documents: createJsonbField(openstatesBill.documents),
