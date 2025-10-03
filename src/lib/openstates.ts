@@ -4,6 +4,7 @@ import { supabase } from './supabase';
 // OpenStates API configuration
 const OPENSTATES_BASE_URL = 'https://openstates.org/api/v1';
 const COLORADO_JURISDICTION = 'co';
+const OPENSTATES_API_KEY = '7fffc14f-6f2d-4168-ac04-628867cec6b1';
 
 // Types for OpenStates API responses
 export interface OpenStatesBill {
@@ -80,6 +81,7 @@ export async function fetchOpenStatesBills(
   const response = await fetch(url, {
     headers: {
       'Accept': 'application/json',
+      'X-API-Key': OPENSTATES_API_KEY,
     },
   });
 
