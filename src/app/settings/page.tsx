@@ -128,7 +128,7 @@ export default function SettingsPage() {
       setSaveStatus('success');
       setHasChanges(false);
       setTimeout(() => setSaveStatus('idle'), 3000);
-    } catch (error) {
+    } catch {
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
     } finally {

@@ -34,10 +34,10 @@ export interface ColoradoBill {
   created_at: string;
   updated_at: string;
   classification?: string[];
-  votes?: any[];
-  documents?: any[];
-  versions?: any[];
-  sources?: any[];
+  votes?: unknown[];
+  documents?: unknown[];
+  versions?: unknown[];
+  sources?: unknown[];
 }
 
 export interface ColoradoSyncResult {
@@ -315,7 +315,7 @@ export async function syncColoradoBills(): Promise<ColoradoSyncResult> {
  */
 export async function testColoradoBillsStructure(): Promise<{
   sample: string;
-  structure: any;
+  structure: unknown;
   metadata: Pick<ColoradoBillsMetadata, 'fileSize' | 'lastModified'>;
 }> {
   console.log('🧪 Testing Colorado bills structure...');
@@ -346,10 +346,10 @@ export async function testColoradoBillsStructure(): Promise<{
     const sample = await response.text();
     
     // Try to parse what we can of the sample
-    let structure: any = null;
+    let structure: unknown = null;
     try {
       structure = JSON.parse(sample);
-    } catch (error) {
+    } catch {
       // If we can't parse the full sample, try to find array boundaries
       const firstBracket = sample.indexOf('[');
       const lastBracket = sample.lastIndexOf(']');

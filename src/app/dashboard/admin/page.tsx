@@ -14,7 +14,7 @@ import {
   Clock,
   Activity
 } from "lucide-react";
-import { fetchBills, fetchLegislators } from "@/lib/data";
+import { fetchLegislators } from "@/lib/data";
 import { Layout } from "@/components/layout";
 import { useState, useEffect } from "react";
 import { getBillCount, getRecentBulkSyncRuns, getDataFreshnessStats } from "@/lib/bulkData";

@@ -32,7 +32,7 @@ interface TestApiResponse {
     sample_size_bytes: number;
     estimated_bill_count?: number;
     file_size_mb: number;
-    sample_preview?: any;
+    sample_preview?: unknown;
   };
   error?: string;
 }
@@ -91,7 +91,7 @@ async function performBulkSync(): Promise<SyncApiResponse> {
     
     // Step 3: Transform data to our schema
     console.log('🔄 Step 3: Transforming data...');
-    const { chunks, errors: transformErrors } = processOpenStatesData(validBills);
+    const { chunks } = processOpenStatesData(validBills);
     
     if (chunks.length === 0) {
       throw new Error('No valid chunks created after transformation');
@@ -174,8 +174,7 @@ async function performStructureTest(): Promise<TestApiResponse> {
       }
     }
     
-    const duration = Date.now() - startTime;
-    console.log(`✅ Structure test complete in ${duration}ms`);
+    console.log(`✅ Structure test complete`);
     
     return {
       success: true,

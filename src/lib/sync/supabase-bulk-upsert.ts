@@ -88,21 +88,21 @@ async function updateBulkSyncRun(
 }
 
 /**
- * Upserts a single chunk of bills with retry logic
+ * Upserts a single chunk of bills with retry logic (currently unused)
  */
 async function upsertBillsChunk(
-  chunk: BatchChunk,
-  maxRetries: number = MAX_RETRIES
+  _chunk: BatchChunk,
+  _maxRetries: number = MAX_RETRIES
 ): Promise<UpsertResult> {
-  let lastError: any = null;
+  let lastError: Error | null = null;
   
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      console.log(`📦 Processing chunk ${chunk.chunkNumber} (${chunk.size} bills) - Attempt ${attempt}`);
+      console.log(`📦 Processing chunk ${_chunk.chunkNumber} (${_chunk.size} bills) - Attempt ${attempt}`);
       
       const { data, error } = await supabase
         .from('bills')
-        .upsert(chunk.bills, {
+        .upsert(_chunk.bills, {
           onConflict: 'openstates_id',
           ignoreDuplicates: false
         })
@@ -113,15 +113,15 @@ async function upsertBillsChunk(
       }
 
       // Analyze results to determine created vs updated
-      const result = analyzeUpsertResults(chunk.bills, data);
+      const result = analyzeUpsertResults(_chunk.bills, data);
       
-      console.log(`✅ Chunk ${chunk.chunkNumber} complete: ${result.created} created, ${result.updated} updated`);
+      console.log(`✅ Chunk ${_chunk.chunkNumber} complete: ${result.created} created, ${result.updated} updated`);
       
       return result;
 
     } catch (error) {
       lastError = error;
-      console.warn(`⚠️ Chunk ${chunk.chunkNumber} attempt ${attempt} failed:`, error);
+      console.warn(`⚠️ Chunk ${_chunk.chunkNumber} attempt ${attempt} failed:`, error);
       
       if (attempt < maxRetries) {
         const delay = RETRY_DELAY_MS * attempt; // Exponential backoff
@@ -132,16 +132,16 @@ async function upsertBillsChunk(
   }
 
   // If all retries failed, return error result
-  console.error(`❌ Chunk ${chunk.chunkNumber} failed after ${maxRetries} attempts`);
+  console.error(`❌ Chunk ${_chunk.chunkNumber} failed after ${_maxRetries} attempts`);
   
   return {
     created: 0,
     updated: 0,
-    failed: chunk.size,
+    failed: _chunk.size,
     errors: [{
-      openstates_id: `chunk_${chunk.chunkNumber}`,
+      openstates_id: `chunk_${_chunk.chunkNumber}`,
       error: lastError?.message || 'Unknown error',
-      chunkNumber: chunk.chunkNumber
+      chunkNumber: _chunk.chunkNumber
     }]
   };
 }
@@ -151,12 +151,10 @@ async function upsertBillsChunk(
  */
 function analyzeUpsertResults(
   insertedBills: BillInsert[],
-  returnedData: any[]
+  returnedData: Array<{ openstates_id: string }>
 ): UpsertResult {
   // Since Supabase doesn't tell us created vs updated directly,
   // we'll use a heuristic: check if the returned data matches our inserted data
-  const returnedIds = new Set(returnedData?.map(item => item.openstates_id) || []);
-  const insertedIds = new Set(insertedBills.map(bill => bill.openstates_id));
   
   // Bills that were returned are likely updates (they existed)
   const updatedCount = returnedData?.length || 0;
@@ -344,7 +342,7 @@ export async function bulkUpsertColoradoBills(
 /**
  * Gets recent bulk sync runs for monitoring
  */
-export async function getRecentBulkSyncRuns(limit: number = 10): Promise<any[]> {
+export async function getRecentBulkSyncRuns(limit: number = 10): Promise<BulkSyncRun[]> {
   const { data, error } = await supabase
     .from('bulk_sync_runs')
     .select('*')
@@ -361,7 +359,7 @@ export async function getRecentBulkSyncRuns(limit: number = 10): Promise<any[]> 
 /**
  * Gets sync run details by ID
  */
-export async function getBulkSyncRun(syncRunId: string): Promise<any> {
+export async function getBulkSyncRun(syncRunId: string): Promise<BulkSyncRun> {
   const { data, error } = await supabase
     .from('bulk_sync_runs')
     .select('*')

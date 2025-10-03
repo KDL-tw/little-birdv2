@@ -1,5 +1,5 @@
 // Transform OpenStates data to Little Bird database schema
-import type { Bill, BillInsert } from '@/lib/supabase/types/database';
+import type { BillInsert } from '@/lib/supabase/types/database';
 
 // OpenStates API response types
 export interface OpenStatesSponsor {
@@ -123,7 +123,7 @@ function calculateDataFreshness(updatedAt: string): number {
     const now = new Date();
     const diffMs = now.getTime() - updateTime.getTime();
     return Math.floor(diffMs / (1000 * 60 * 60)); // Convert to hours
-  } catch (error) {
+  } catch {
     console.warn(`Invalid date format: ${updatedAt}`);
     return 0;
   }
@@ -132,7 +132,7 @@ function calculateDataFreshness(updatedAt: string): number {
 /**
  * Safely handles JSONB fields with null/undefined protection
  */
-function createJsonbField(data: any): any {
+function createJsonbField(data: unknown): Record<string, unknown> {
   if (data === null || data === undefined) {
     return {};
   }
@@ -350,7 +350,7 @@ export function processOpenStatesData(openstatesBills: OpenStatesBill[]): {
 /**
  * Validates OpenStates bill structure before transformation
  */
-export function validateOpenStatesBill(bill: any): bill is OpenStatesBill {
+export function validateOpenStatesBill(bill: unknown): bill is OpenStatesBill {
   if (!bill || typeof bill !== 'object') {
     return false;
   }
@@ -376,7 +376,7 @@ export function validateOpenStatesBill(bill: any): bill is OpenStatesBill {
 /**
  * Filters valid OpenStates bills from raw data
  */
-export function filterValidOpenStatesBills(rawBills: any[]): OpenStatesBill[] {
+export function filterValidOpenStatesBills(rawBills: unknown[]): OpenStatesBill[] {
   console.log(`🔍 Filtering ${rawBills.length} raw bills for valid structure...`);
   
   const validBills = rawBills.filter(validateOpenStatesBill);

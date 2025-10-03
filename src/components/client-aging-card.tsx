@@ -9,7 +9,6 @@ import {
   Users, 
   AlertCircle, 
   Phone, 
-  Mail,
   Calendar
 } from "lucide-react";
 import { ClientAging } from "@/lib/types";

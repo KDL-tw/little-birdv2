@@ -1,6 +1,6 @@
 // Bulk Data Management for Little Bird
 import { supabase } from './supabase/client';
-import type { Bill, Legislator, BulkSyncRun, OSINTEnrichment } from './supabase/types/database';
+import type { Bill, BulkSyncRun, OSINTEnrichment } from './supabase/types/database';
 
 // Types for bulk data operations (using database types)
 export type BillData = Omit<Bill, 'id' | 'created_at' | 'updated_at' | 'data_freshness_hours'> & {
@@ -44,10 +44,10 @@ export async function updateBulkSyncRun(
 export async function bulkUpsertBills(
   bills: BillData[],
   syncRunId: string
-): Promise<{ created: number; updated: number; errors: any[] }> {
+): Promise<{ created: number; updated: number; errors: Array<{ openstates_id: string; error: string }> }> {
   let created = 0;
   let updated = 0;
-  const errors: any[] = [];
+  const errors: Array<{ openstates_id: string; error: string }> = [];
 
   for (const bill of bills) {
     try {
@@ -109,10 +109,10 @@ export async function bulkUpsertBills(
       }
     } catch (error) {
       console.error(`Error processing bill ${bill.openstates_id}:`, error);
-      errors.push({
-        openstates_id: bill.openstates_id,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
+        errors.push({
+          openstates_id: bill.openstates_id || 'unknown',
+          error: error instanceof Error ? error.message : 'Unknown error'
+        });
     }
   }
 

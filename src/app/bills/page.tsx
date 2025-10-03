@@ -16,7 +16,6 @@ export default function BillsPage() {
   const [bills, setBills] = useState<Bill[]>(sampleBills);
   const [searchTerm, setSearchTerm] = useState("");
   const [isImporting, setIsImporting] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Load bills from Supabase on component mount
   useEffect(() => {
@@ -25,7 +24,7 @@ export default function BillsPage() {
         const supabaseBills = await getBills(50, 0);
         
         // Convert Supabase bills to our Bill type
-        const convertedBills = supabaseBills.map((sb: any) => ({
+        const convertedBills = supabaseBills.map((sb: Record<string, unknown>) => ({
           id: sb.id,
           billNumber: sb.bill_number,
           title: sb.title,
