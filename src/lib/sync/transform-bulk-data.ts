@@ -184,7 +184,7 @@ function transformSingleBill(openstatesBill: OpenStatesBill): BillInsert {
         count: sponsorNames.length,
         primary: sponsorNames[0] || null,
         details: JSON.parse(JSON.stringify(openstatesBill.sponsorships || []))
-      } as any,
+      } as Record<string, unknown>,
       actions: createJsonbField(openstatesBill.actions),
       votes: createJsonbField(openstatesBill.votes),
       documents: createJsonbField(openstatesBill.documents),
