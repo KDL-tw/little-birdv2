@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { FileText, TrendingUp, Building2, Target, BarChart3 } from "lucide-react";
 import { Layout } from "@/components/layout";
+import { AlertsCard } from "@/components/alerts-card";
 
 export default function Home() {
   return (
@@ -81,34 +82,42 @@ export default function Home() {
           </Card>
         </div>
 
-        {/* Quick Actions */}
-        <div className="mb-8">
-          <Card className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-gray-900">Quick Actions</CardTitle>
-              <CardDescription className="text-gray-600">
-                Common tasks and shortcuts for lobbying intelligence
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-all duration-200">
-                <Building2 className="h-5 w-5 text-gray-500 mr-3" />
-                <span className="text-gray-600">Manage Clients</span>
-              </div>
-              <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-all duration-200">
-                <Target className="h-5 w-5 text-gray-500 mr-3" />
-                <span className="text-gray-600">Track Positions</span>
-              </div>
-              <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-all duration-200">
-                <FileText className="h-5 w-5 text-gray-500 mr-3" />
-                <span className="text-gray-600">Monitor Bills</span>
-              </div>
-              <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-all duration-200">
-                <TrendingUp className="h-5 w-5 text-gray-500 mr-3" />
-                <span className="text-gray-600">View Analytics</span>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Alerts and Quick Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Alerts Card */}
+          <div>
+            <AlertsCard />
+          </div>
+          
+          {/* Quick Actions */}
+          <div>
+            <Card className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow h-full">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-gray-900">Quick Actions</CardTitle>
+                <CardDescription className="text-gray-600">
+                  Common tasks and shortcuts for lobbying intelligence
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 gap-4">
+                <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-all duration-200">
+                  <Building2 className="h-5 w-5 text-gray-500 mr-3" />
+                  <span className="text-gray-600">Manage Clients</span>
+                </div>
+                <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-all duration-200">
+                  <Target className="h-5 w-5 text-gray-500 mr-3" />
+                  <span className="text-gray-600">Track Positions</span>
+                </div>
+                <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-all duration-200">
+                  <FileText className="h-5 w-5 text-gray-500 mr-3" />
+                  <span className="text-gray-600">Monitor Bills</span>
+                </div>
+                <div className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-all duration-200">
+                  <TrendingUp className="h-5 w-5 text-gray-500 mr-3" />
+                  <span className="text-gray-600">View Analytics</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
       </main>

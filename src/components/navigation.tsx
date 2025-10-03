@@ -11,10 +11,8 @@ import {
   UserCheck,
   Shield,
   TrendingUp, 
-  Bell,
   Database,
   Settings,
-  BarChart3,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
@@ -28,12 +26,10 @@ const navigation = [
   { name: 'Contacts', href: '/contacts', icon: UserCheck },
   { name: 'Compliance', href: '/compliance', icon: Shield },
   { name: 'Analytics', href: '/analytics', icon: TrendingUp },
-  { name: 'Alerts', href: '/alerts', icon: Bell },
 ];
 
 const tools = [
   { name: 'Data Sync', href: '/dashboard/admin', icon: Database },
-  { name: 'Sources', href: '/sources', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
