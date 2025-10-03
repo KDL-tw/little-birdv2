@@ -30,9 +30,7 @@ CREATE TABLE public.bills (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   openstates_updated_at TIMESTAMP WITH TIME ZONE,
-  data_freshness_hours INTEGER GENERATED ALWAYS AS (
-    EXTRACT(EPOCH FROM (NOW() - COALESCE(openstates_updated_at, created_at))) / 3600
-  ) STORED
+  data_freshness_hours INTEGER
 );
 
 -- Create the 'legislators' table (Bulk Data Storage - for later)
@@ -62,9 +60,7 @@ CREATE TABLE public.legislators (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   openstates_updated_at TIMESTAMP WITH TIME ZONE,
-  data_freshness_hours INTEGER GENERATED ALWAYS AS (
-    EXTRACT(EPOCH FROM (NOW() - COALESCE(openstates_updated_at, created_at))) / 3600
-  ) STORED
+  data_freshness_hours INTEGER
 );
 
 -- Create the 'bulk_sync_runs' table (Bulk Import Tracking)
@@ -142,6 +138,15 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+-- Create function to calculate data freshness
+CREATE OR REPLACE FUNCTION calculate_data_freshness()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.data_freshness_hours = EXTRACT(EPOCH FROM (NOW() - COALESCE(NEW.openstates_updated_at, NEW.created_at))) / 3600;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
 -- Create triggers to automatically update updated_at
 CREATE TRIGGER update_bills_updated_at BEFORE UPDATE ON public.bills
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -154,6 +159,13 @@ CREATE TRIGGER update_bulk_sync_runs_updated_at BEFORE UPDATE ON public.bulk_syn
 
 CREATE TRIGGER update_osint_enrichments_updated_at BEFORE UPDATE ON public.osint_enrichments
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Create triggers to calculate data freshness
+CREATE TRIGGER calculate_bills_freshness BEFORE INSERT OR UPDATE ON public.bills
+    FOR EACH ROW EXECUTE FUNCTION calculate_data_freshness();
+
+CREATE TRIGGER calculate_legislators_freshness BEFORE INSERT OR UPDATE ON public.legislators
+    FOR EACH ROW EXECUTE FUNCTION calculate_data_freshness();
 
 -- Insert initial bulk sync run record for tracking
 INSERT INTO public.bulk_sync_runs (
