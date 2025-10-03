@@ -1,0 +1,10 @@
+// BACKUP: Bulk Colorado sync method - kept for potential future use
+// This file contains the original bulk API approach that we're sunsetting
+// in favor of the OpenStates scraper method
+
+// Original bulk sync implementation preserved here for reference
+// See: https://data.openstates.org/states/co/bills.json (currently returning 403)
+
+export const BULK_METHOD_SUNSET = true;
+export const SUNSET_REASON = "OpenStates bulk API returning 403 Forbidden. Switching to scraper method.";
+export const SUNSET_DATE = "2025-01-03";

@@ -1,4 +1,7 @@
-// Bulk Colorado Bills Sync - Downloads and parses OpenStates JSON data
+// SUNSET: Bulk Colorado Bills Sync - Use OpenStates scraper instead
+// This method is deprecated due to API 403 errors
+// See: https://github.com/openstates/openstates-scrapers/tree/main/scrapers_next/co
+
 import { BULK_DATA_URL } from '@/lib/config';
 
 // Types for the sync operation

@@ -1,0 +1,129 @@
+name: Colorado Legislative Data Scraper
+
+on:
+  schedule:
+    # Run daily at 6 AM UTC (midnight MST, 1 AM MDT)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual triggering
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/colorado-scraper.yml'
+
+jobs:
+  scrape-colorado-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install OpenStates scrapers
+      run: |
+        git clone https://github.com/openstates/openstates-scrapers.git
+        cd openstates-scrapers
+        pip install -r requirements.txt
+        
+    - name: Run Colorado Bills Scraper
+      run: |
+        cd openstates-scrapers
+        python -m scrapers_next.co.bills --output-dir ../scraped-data/co/bills
+        
+    - name: Run Colorado Legislators Scraper
+      run: |
+        cd openstates-scrapers
+        python -m scrapers_next.co.people --output-dir ../scraped-data/co/people
+        
+    - name: Process and Transform Data
+      run: |
+        # Create a simple Node.js script to process the scraped data
+        cat > process-scraped-data.js << 'EOF'
+        const fs = require('fs');
+        const path = require('path');
+        
+        // Process bills data
+        const billsDir = './scraped-data/co/bills';
+        if (fs.existsSync(billsDir)) {
+          const billFiles = fs.readdirSync(billsDir).filter(f => f.endsWith('.json'));
+          console.log(`Found ${billFiles.length} bill files`);
+          
+          // Combine all bills into one file
+          const allBills = [];
+          billFiles.forEach(file => {
+            try {
+              const data = JSON.parse(fs.readFileSync(path.join(billsDir, file), 'utf8'));
+              if (Array.isArray(data)) {
+                allBills.push(...data);
+              } else {
+                allBills.push(data);
+              }
+            } catch (error) {
+              console.error(`Error processing ${file}:`, error.message);
+            }
+          });
+          
+          // Save combined bills data
+          fs.writeFileSync('./scraped-data/co/combined-bills.json', JSON.stringify(allBills, null, 2));
+          console.log(`Combined ${allBills.length} bills into combined-bills.json`);
+        }
+        
+        // Process legislators data
+        const peopleDir = './scraped-data/co/people';
+        if (fs.existsSync(peopleDir)) {
+          const peopleFiles = fs.readdirSync(peopleDir).filter(f => f.endsWith('.json'));
+          console.log(`Found ${peopleFiles.length} people files`);
+          
+          // Combine all legislators into one file
+          const allLegislators = [];
+          peopleFiles.forEach(file => {
+            try {
+              const data = JSON.parse(fs.readFileSync(path.join(peopleDir, file), 'utf8'));
+              if (Array.isArray(data)) {
+                allLegislators.push(...data);
+              } else {
+                allLegislators.push(data);
+              }
+            } catch (error) {
+              console.error(`Error processing ${file}:`, error.message);
+            }
+          });
+          
+          // Save combined legislators data
+          fs.writeFileSync('./scraped-data/co/combined-legislators.json', JSON.stringify(allLegislators, null, 2));
+          console.log(`Combined ${allLegislators.length} legislators into combined-legislators.json`);
+        }
+        EOF
+        
+        node process-scraped-data.js
+        
+    - name: Upload Scraped Data
+      uses: actions/upload-artifact@v3
+      with:
+        name: colorado-legislative-data
+        path: scraped-data/
+        retention-days: 30
+        
+    - name: Trigger Supabase Sync
+      run: |
+        # Trigger your Vercel function to process the scraped data
+        curl -X POST "${{ secrets.VERCEL_SYNC_URL }}" \
+          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+          -H "Content-Type: application/json" \
+          -d '{"source": "github-actions", "data_type": "scraped"}'
+      env:
+        VERCEL_SYNC_URL: ${{ secrets.VERCEL_SYNC_URL }}
+        CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        
+    - name: Commit Scraped Data (Optional)
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add scraped-data/
+        git diff --staged --quiet || git commit -m "Update Colorado legislative data [skip ci]"
+        git push
+      if: github.ref == 'refs/heads/main'
