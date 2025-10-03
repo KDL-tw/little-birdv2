@@ -44,7 +44,8 @@ export const sampleClientAging: ClientAging[] = [
     daysSinceAdded: 2,
     status: 'new',
     lastContact: '2025-01-28T14:30:00Z',
-    priority: 'high'
+    priority: 'high',
+    declarationStatus: 'declared'
   },
   {
     id: 'aging-2',
@@ -54,7 +55,8 @@ export const sampleClientAging: ClientAging[] = [
     daysSinceAdded: 1,
     status: 'new',
     lastContact: undefined,
-    priority: 'medium'
+    priority: 'medium',
+    declarationStatus: 'undeclared'
   }
 ];
 
@@ -63,7 +65,7 @@ export const sampleReportingDeadlines: ReportingDeadline[] = [
   {
     id: 'deadline-1',
     name: 'Quarterly Lobbying Report',
-    type: 'quarterly',
+    type: 'Quarterly Lobbying Disclosure',
     deadlineDate: '2025-03-31T23:59:59Z',
     frequency: 'quarterly',
     description: 'Colorado Secretary of State quarterly lobbying disclosure report',
@@ -74,7 +76,7 @@ export const sampleReportingDeadlines: ReportingDeadline[] = [
   {
     id: 'deadline-2',
     name: 'Monthly Client Billing',
-    type: 'monthly',
+    type: 'Client Activity Summary',
     deadlineDate: '2025-02-28T23:59:59Z',
     frequency: 'monthly',
     description: 'Monthly client billing and activity reports',
@@ -85,7 +87,7 @@ export const sampleReportingDeadlines: ReportingDeadline[] = [
   {
     id: 'deadline-3',
     name: 'Annual Registration Renewal',
-    type: 'annual',
+    type: 'State Registration',
     deadlineDate: '2025-12-31T23:59:59Z',
     frequency: 'annually',
     description: 'Annual lobbying registration renewal with state',

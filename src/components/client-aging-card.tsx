@@ -24,6 +24,11 @@ const statusColors = {
   established: "bg-blue-100 text-blue-800 border-blue-200"
 };
 
+const declarationColors = {
+  declared: "bg-green-100 text-green-800 border-green-200",
+  undeclared: "bg-red-100 text-red-800 border-red-200"
+};
+
 const priorityColors = {
   high: "bg-red-100 text-red-800 border-red-200",
   medium: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -65,6 +70,19 @@ export function ClientAgingCard({ clientAging }: ClientAgingCardProps) {
     );
   };
 
+  const toggleDeclarationStatus = (clientId: string) => {
+    setLocalAging(prev => 
+      prev.map(client => 
+        client.clientId === clientId 
+          ? { 
+              ...client, 
+              declarationStatus: client.declarationStatus === 'declared' ? 'undeclared' : 'declared'
+            }
+          : client
+      )
+    );
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -96,6 +114,7 @@ export function ClientAgingCard({ clientAging }: ClientAgingCardProps) {
 
   const newClients = localAging.filter(client => getAgingStatus(client.daysSinceAdded) === 'new');
   const needsContact = localAging.filter(client => !client.lastContact && client.daysSinceAdded >= 1);
+  const undeclaredClients = localAging.filter(client => client.declarationStatus === 'undeclared');
 
   return (
     <Card className="bg-white border border-gray-200 rounded-xl shadow-sm">
@@ -114,13 +133,11 @@ export function ClientAgingCard({ clientAging }: ClientAgingCardProps) {
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div className="text-center p-3 bg-green-50 rounded-lg">
               <div className="text-2xl font-bold text-green-900">{newClients.length}</div>
-              <div className="text-sm text-green-700">New (≤48h)</div>
+              <div className="text-sm text-green-700">New Clients</div>
             </div>
-            <div className="text-center p-3 bg-yellow-50 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-900">
-                {localAging.filter(c => getAgingStatus(c.daysSinceAdded) === 'recent').length}
-              </div>
-              <div className="text-sm text-yellow-700">Recent (3-7d)</div>
+            <div className="text-center p-3 bg-red-50 rounded-lg">
+              <div className="text-2xl font-bold text-red-900">{undeclaredClients.length}</div>
+              <div className="text-sm text-red-700">Undeclared</div>
             </div>
             <div className="text-center p-3 bg-orange-50 rounded-lg">
               <div className="text-2xl font-bold text-orange-900">{needsContact.length}</div>
@@ -150,17 +167,20 @@ export function ClientAgingCard({ clientAging }: ClientAgingCardProps) {
                             <h4 className="font-semibold text-gray-900">{client.clientName}</h4>
                             {getStatusIcon(status)}
                           </div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <Badge className={statusColors[status]}>
-                              {status.toUpperCase()}
-                            </Badge>
-                            <Badge className={priorityColors[client.priority]}>
-                              {client.priority.toUpperCase()} PRIORITY
-                            </Badge>
-                            <Badge variant="outline" className="text-xs">
-                              {client.daysSinceAdded} days old
-                            </Badge>
-                          </div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge className={statusColors[status]}>
+                            {status.toUpperCase()}
+                          </Badge>
+                          <Badge className={declarationColors[client.declarationStatus]}>
+                            {client.declarationStatus.toUpperCase()}
+                          </Badge>
+                          <Badge className={priorityColors[client.priority]}>
+                            {client.priority.toUpperCase()} PRIORITY
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {client.daysSinceAdded} days old
+                          </Badge>
+                        </div>
                           <p className="text-sm text-gray-600">
                             Added: {formatDate(client.addedAt)}
                           </p>
@@ -183,9 +203,17 @@ export function ClientAgingCard({ clientAging }: ClientAgingCardProps) {
                           <Phone className="h-4 w-4 mr-2" />
                           Mark Contacted
                         </Button>
-                        <Button size="sm" variant="outline" className="flex-1">
-                          <Mail className="h-4 w-4 mr-2" />
-                          Send Email
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => toggleDeclarationStatus(client.clientId)}
+                          className={`flex-1 ${
+                            client.declarationStatus === 'declared' 
+                              ? 'bg-green-50 text-green-700 border-green-300' 
+                              : 'bg-red-50 text-red-700 border-red-300'
+                          }`}
+                        >
+                          {client.declarationStatus === 'declared' ? 'Declared ✓' : 'Declare'}
                         </Button>
                         <Button size="sm" variant="outline" className="flex-1">
                           <Calendar className="h-4 w-4 mr-2" />
@@ -207,8 +235,8 @@ export function ClientAgingCard({ clientAging }: ClientAgingCardProps) {
           ) : (
             <div className="text-center py-8 text-gray-500">
               <Users className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-              <p>No recent client additions</p>
-              <p className="text-sm">New clients will appear here for 48-hour tracking</p>
+              <p>No new clients to track</p>
+              <p className="text-sm">New clients will appear here for declaration tracking within 48-hour window</p>
             </div>
           )}
 

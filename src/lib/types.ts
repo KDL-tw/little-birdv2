@@ -285,12 +285,13 @@ export interface ClientAging {
   status: 'new' | 'recent' | 'established';
   lastContact?: string;
   priority: 'high' | 'medium' | 'low';
+  declarationStatus: 'declared' | 'undeclared';
 }
 
 export interface ReportingDeadline {
   id: string;
   name: string;
-  type: 'quarterly' | 'monthly' | 'annual' | 'custom';
+  type: string; // Changed to text entry field
   deadlineDate: string;
   frequency: 'monthly' | 'quarterly' | 'annually' | 'custom';
   description?: string;

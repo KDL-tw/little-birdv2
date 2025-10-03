@@ -34,11 +34,21 @@ interface ReportingDeadlinesCardProps {
   deadlines: ReportingDeadline[];
 }
 
-const typeColors = {
-  quarterly: "bg-blue-100 text-blue-800 border-blue-200",
-  monthly: "bg-green-100 text-green-800 border-green-200",
-  annual: "bg-purple-100 text-purple-800 border-purple-200",
-  custom: "bg-gray-100 text-gray-800 border-gray-200"
+// Dynamic type colors - will be generated based on type string
+const getTypeColor = (type: string) => {
+  const colors = [
+    "bg-blue-100 text-blue-800 border-blue-200",
+    "bg-green-100 text-green-800 border-green-200", 
+    "bg-purple-100 text-purple-800 border-purple-200",
+    "bg-orange-100 text-orange-800 border-orange-200",
+    "bg-red-100 text-red-800 border-red-200",
+    "bg-indigo-100 text-indigo-800 border-indigo-200"
+  ];
+  const hash = type.split('').reduce((a, b) => {
+    a = ((a << 5) - a) + b.charCodeAt(0);
+    return a & a;
+  }, 0);
+  return colors[Math.abs(hash) % colors.length];
 };
 
 export function ReportingDeadlinesCard({ deadlines }: ReportingDeadlinesCardProps) {
@@ -206,7 +216,7 @@ export function ReportingDeadlinesCard({ deadlines }: ReportingDeadlinesCardProp
                             {getStatusIcon(deadline)}
                           </div>
                           <div className="flex items-center gap-2 mb-2">
-                            <Badge className={typeColors[deadline.type]}>
+                            <Badge className={getTypeColor(deadline.type)}>
                               {deadline.type.toUpperCase()}
                             </Badge>
                             <Badge variant="outline" className="text-xs">
@@ -339,17 +349,14 @@ function DeadlineForm({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="text-sm text-gray-500">Type</label>
-          <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value as 'quarterly' | 'monthly' | 'annual' | 'custom' }))}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="quarterly">Quarterly</SelectItem>
-              <SelectItem value="monthly">Monthly</SelectItem>
-              <SelectItem value="annual">Annual</SelectItem>
-              <SelectItem value="custom">Custom</SelectItem>
-            </SelectContent>
-          </Select>
+          <input
+            type="text"
+            value={formData.type}
+            onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value }))}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+            placeholder="e.g., Quarterly Lobbying Disclosure"
+            required
+          />
         </div>
 
         <div>
