@@ -1,47 +1,11 @@
 // Bulk Data Management for Little Bird
-import { supabase } from './supabase';
+import { supabase } from './supabase/client';
+import type { Bill, Legislator, BulkSyncRun, OSINTEnrichment } from './supabase/types/database';
 
-// Types for bulk data operations
-export interface BulkSyncRun {
-  id: string;
-  started_at: string;
-  completed_at?: string;
-  source_url: string;
-  file_size_mb?: number;
-  bills_processed: number;
-  bills_updated: number;
-  bills_created: number;
-  status: 'running' | 'completed' | 'failed' | 'partial';
-  error: any[];
-}
-
-export interface BillData {
+// Types for bulk data operations (using database types)
+export type BillData = Omit<Bill, 'id' | 'created_at' | 'updated_at' | 'data_freshness_hours'> & {
   id?: string;
-  openstates_id: string;
-  bill_number: string;
-  title: string;
-  session: string;
-  chamber: string;
-  status?: string;
-  classification?: string[];
-  subject?: string[];
-  sponsors?: any;
-  actions?: any;
-  votes?: any;
-  documents?: any;
-  versions?: any;
-  sources?: any;
-  openstates_updated_at?: string;
-}
-
-export interface OSINTEnrichment {
-  id?: string;
-  bill_id: string;
-  enrichment_type: 'ai_summary' | 'impact_analysis' | 'stakeholder_map' | 'news_mentions';
-  data: any;
-  confidence_score?: number;
-  source?: string;
-}
+};
 
 // Start a new bulk sync run
 export async function startBulkSyncRun(sourceUrl: string, fileSizeMb?: number): Promise<string> {
