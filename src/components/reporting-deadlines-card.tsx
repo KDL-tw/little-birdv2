@@ -86,6 +86,12 @@ export function ReportingDeadlinesCard({ deadlines }: ReportingDeadlinesCardProp
     setEditingDeadline(null);
   };
 
+  const handleEditSubmit = (data: Omit<ReportingDeadline, 'id' | 'createdAt' | 'updatedAt'>) => {
+    if (editingDeadline) {
+      updateDeadline(editingDeadline.id, data);
+    }
+  };
+
   const deleteDeadline = (id: string) => {
     setLocalDeadlines(prev => prev.filter(deadline => deadline.id !== id));
   };
@@ -281,7 +287,7 @@ export function ReportingDeadlinesCard({ deadlines }: ReportingDeadlinesCardProp
               </DialogHeader>
               <DeadlineForm 
                 deadline={editingDeadline}
-                onSubmit={(updates) => updateDeadline(editingDeadline.id, updates)}
+                onSubmit={handleEditSubmit}
                 onCancel={() => setEditingDeadline(null)}
               />
             </DialogContent>
@@ -299,7 +305,7 @@ function DeadlineForm({
   onCancel 
 }: { 
   deadline?: ReportingDeadline;
-  onSubmit: (data: Omit<ReportingDeadline, 'id' | 'createdAt' | 'updatedAt'> | Partial<ReportingDeadline>) => void;
+  onSubmit: (data: Omit<ReportingDeadline, 'id' | 'createdAt' | 'updatedAt'>) => void;
   onCancel: () => void;
 }) {
   const [formData, setFormData] = useState({
