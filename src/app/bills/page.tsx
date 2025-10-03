@@ -79,7 +79,7 @@ export default function BillsPage() {
         // Fall back to sample bills
         setBills(sampleBills);
       } finally {
-        setIsLoading(false);
+        // Loading complete
       }
     };
 
