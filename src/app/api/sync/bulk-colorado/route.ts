@@ -1,6 +1,6 @@
 // API route for bulk Colorado bills synchronization
 import { NextRequest, NextResponse } from 'next/server';
-import { CRON_CONFIG, BULK_DATA_URL } from '@/lib/config';
+import { CRON_CONFIG, BULK_DATA_URL, validateEnvironmentVariables } from '@/lib/config';
 import { syncColoradoBills, testColoradoBillsStructure } from '@/lib/sync/bulk-colorado-sync';
 import { processOpenStatesData, filterValidOpenStatesBills } from '@/lib/sync/transform-bulk-data';
 import { bulkUpsertColoradoBills } from '@/lib/sync/supabase-bulk-upsert';
@@ -215,6 +215,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       { status: 401 }
     );
   }
+
+  // Validate environment variables at runtime
+  try {
+    validateEnvironmentVariables();
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: 'Configuration error', error: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
+  }
   
   console.log('🧪 GET request: Testing OpenStates structure...');
   
@@ -247,6 +257,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       { success: false, message: 'Unauthorized', error: 'Invalid or missing authorization header' },
       { status: 401 }
+    );
+  }
+
+  // Validate environment variables at runtime
+  try {
+    validateEnvironmentVariables();
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: 'Configuration error', error: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
     );
   }
   
