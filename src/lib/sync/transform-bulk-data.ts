@@ -137,14 +137,18 @@ function createJsonbField(data: unknown): Record<string, unknown> {
     return {};
   }
   
-  if (typeof data === 'object') {
-    return data;
+  if (typeof data === 'object' && !Array.isArray(data)) {
+    return data as Record<string, unknown>;
   }
   
   // Try to parse if it's a string
   if (typeof data === 'string') {
     try {
-      return JSON.parse(data);
+      const parsed = JSON.parse(data);
+      if (typeof parsed === 'object' && !Array.isArray(parsed)) {
+        return parsed as Record<string, unknown>;
+      }
+      return {};
     } catch {
       return {};
     }
