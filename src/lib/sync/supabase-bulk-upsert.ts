@@ -1,6 +1,6 @@
 // Supabase bulk upsert operations for Colorado bills
 import { supabase } from '@/lib/supabase/client';
-import type { BillInsert, BulkSyncRunInsert } from '@/lib/supabase/types/database';
+import type { BillInsert, BulkSyncRun, BulkSyncRunInsert } from '@/lib/supabase/types/database';
 import type { BatchChunk } from './transform-bulk-data';
 
 // Types for sync operations
