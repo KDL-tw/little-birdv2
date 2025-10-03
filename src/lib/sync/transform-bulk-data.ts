@@ -1,5 +1,5 @@
 // Transform OpenStates data to Little Bird database schema
-import type { BillInsert } from '@/lib/supabase/types/database';
+import type { BillInsert, Json } from '@/lib/supabase/types/database';
 
 // OpenStates API response types
 export interface OpenStatesSponsor {
@@ -184,7 +184,7 @@ function transformSingleBill(openstatesBill: OpenStatesBill): BillInsert {
         count: sponsorNames.length,
         primary: sponsorNames[0] || null,
         details: JSON.parse(JSON.stringify(openstatesBill.sponsorships || []))
-      } as Record<string, unknown>,
+      } as Json,
       actions: createJsonbField(openstatesBill.actions),
       votes: createJsonbField(openstatesBill.votes),
       documents: createJsonbField(openstatesBill.documents),
