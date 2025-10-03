@@ -14,7 +14,7 @@ export default function Home() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <p className="text-gray-600 mt-1">
-              Here&apos;s what&apos;s happening with your legislative tracking today.
+              Here&apos;s what&apos;s happening with your legislative tracking today. (Updated)
             </p>
           </div>
           <div className="flex items-center space-x-4">
