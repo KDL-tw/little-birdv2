@@ -114,20 +114,7 @@ function extractSponsorNames(sponsorships: OpenStatesSponsor[]): string[] {
   return [...new Set(names)]; // Remove duplicates
 }
 
-/**
- * Calculates data freshness hours from updated_at timestamp
- */
-function calculateDataFreshness(updatedAt: string): number {
-  try {
-    const updateTime = new Date(updatedAt);
-    const now = new Date();
-    const diffMs = now.getTime() - updateTime.getTime();
-    return Math.floor(diffMs / (1000 * 60 * 60)); // Convert to hours
-  } catch {
-    console.warn(`Invalid date format: ${updatedAt}`);
-    return 0;
-  }
-}
+// calculateDataFreshness function removed - data_freshness_hours is now calculated by database trigger
 
 /**
  * Safely handles JSONB fields with null/undefined protection
@@ -190,8 +177,8 @@ function transformSingleBill(openstatesBill: OpenStatesBill): BillInsert {
       documents: createJsonbField(openstatesBill.documents),
       versions: createJsonbField(openstatesBill.versions),
       sources: createJsonbField(openstatesBill.sources),
-      openstates_updated_at: openstatesBill.updated_at,
-      data_freshness_hours: calculateDataFreshness(openstatesBill.updated_at)
+      openstates_updated_at: openstatesBill.updated_at
+      // data_freshness_hours is calculated by database trigger
     };
 
     return bill;
