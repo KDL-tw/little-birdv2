@@ -346,20 +346,22 @@ export function validateOpenStatesBill(bill: unknown): bill is OpenStatesBill {
     return false;
   }
   
+  const billObj = bill as Record<string, unknown>;
+  
   // Check required fields
   const requiredFields = ['id', 'bill_id', 'title', 'session', 'chamber'];
   for (const field of requiredFields) {
-    if (!bill[field]) {
+    if (!billObj[field]) {
       return false;
     }
   }
   
   // Check field types
-  if (typeof bill.id !== 'string') return false;
-  if (typeof bill.bill_id !== 'string') return false;
-  if (typeof bill.title !== 'string') return false;
-  if (typeof bill.session !== 'string') return false;
-  if (typeof bill.chamber !== 'string') return false;
+  if (typeof billObj.id !== 'string') return false;
+  if (typeof billObj.bill_id !== 'string') return false;
+  if (typeof billObj.title !== 'string') return false;
+  if (typeof billObj.session !== 'string') return false;
+  if (typeof billObj.chamber !== 'string') return false;
   
   return true;
 }
