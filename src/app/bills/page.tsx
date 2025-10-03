@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { FileText, Search, Filter, Calendar, User, Plus, Upload } from "lucide-react";
 import { Layout } from "@/components/layout";
 import { BillCard } from "@/components/bill-card";
-import { Bill, LobbyingPosition } from "@/lib/types";
+import { Bill, LobbyingPosition, BillType, BillStatus, Chamber } from "@/lib/types";
 import { sampleBills } from "@/lib/data/sampleData";
 import { getBills } from "@/lib/bulkData";
 
@@ -29,31 +29,42 @@ export default function BillsPage() {
           const subjects = sb.subject as string[] || [];
           
           return {
-            id: sb.id,
-            billNumber: sb.bill_number,
-            title: sb.title,
-            description: sb.description || '',
-            status: sb.status,
-            chamber: sb.chamber,
+            id: String(sb.id),
+            billNumber: String(sb.bill_number),
+            title: String(sb.title),
+            description: String(sb.description || ''),
+            billType: 'bill' as BillType,
+            status: String(sb.status) as BillStatus,
             sponsor: sponsorNames[0] || 'Unknown',
             coSponsors: sponsorNames.slice(1) || [],
-            introducedDate: sb.created_at,
-            lastActionDate: sb.updated_at,
-            fiscalNote: sb.fiscal_note || '',
+            introducedDate: String(sb.created_at),
+            lastActionDate: String(sb.updated_at),
+            chamber: String(sb.chamber) as Chamber,
+            fiscalNote: sb.fiscal_note ? {
+              id: 'temp-id',
+              billId: String(sb.id),
+              description: String(sb.fiscal_note),
+              effectiveDate: String(sb.created_at),
+              agency: 'Unknown',
+              createdAt: String(sb.created_at)
+            } : undefined,
             position: 'neutral' as LobbyingPosition,
-            clientId: null,
+            clientId: undefined,
             notes: [],
             tags: subjects,
             issue: subjects[0] || 'General',
-            progress: {
-              currentStage: sb.status,
-              stages: [
-                { name: 'Introduced', completed: true, date: sb.created_at },
-                { name: 'Committee', completed: false },
-                { name: 'Floor Vote', completed: false },
-                { name: 'Governor', completed: false }
-              ]
-            }
+            progress: [
+              {
+                id: 'temp-progress-id',
+                billId: String(sb.id),
+                stage: String(sb.status) as BillStatus,
+                date: String(sb.created_at),
+                description: 'Bill introduced',
+                chamber: String(sb.chamber) as Chamber
+              }
+            ],
+            createdAt: String(sb.created_at),
+            updatedAt: String(sb.updated_at)
           };
         });
 
