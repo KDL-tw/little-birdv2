@@ -166,8 +166,9 @@ async function performStructureTest(): Promise<TestApiResponse> {
       // Look for common array properties
       const possibleArrays = ['bills', 'results', 'data'];
       for (const prop of possibleArrays) {
-        if (Array.isArray(testResult.structure[prop])) {
-          estimatedBillCount = testResult.structure[prop].length;
+        const structureObj = testResult.structure as Record<string, unknown>;
+        if (Array.isArray(structureObj[prop])) {
+          estimatedBillCount = structureObj[prop].length;
           break;
         }
       }
