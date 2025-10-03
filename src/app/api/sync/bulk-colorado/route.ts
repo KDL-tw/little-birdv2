@@ -153,7 +153,6 @@ async function performBulkSync(): Promise<SyncApiResponse> {
  * Test function to validate OpenStates structure
  */
 async function performStructureTest(): Promise<TestApiResponse> {
-  const startTime = Date.now();
   console.log('🧪 Starting OpenStates structure test...');
   
   try {
