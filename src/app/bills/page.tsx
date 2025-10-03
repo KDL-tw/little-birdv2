@@ -24,33 +24,38 @@ export default function BillsPage() {
         const supabaseBills = await getBills(50, 0);
         
         // Convert Supabase bills to our Bill type
-        const convertedBills = supabaseBills.map((sb: Record<string, unknown>) => ({
-          id: sb.id,
-          billNumber: sb.bill_number,
-          title: sb.title,
-          description: sb.description || '',
-          status: sb.status,
-          chamber: sb.chamber,
-          sponsor: sb.sponsor_names?.[0] || 'Unknown',
-          coSponsors: sb.sponsor_names?.slice(1) || [],
-          introducedDate: sb.created_at,
-          lastActionDate: sb.updated_at,
-          fiscalNote: sb.fiscal_note || '',
-          position: 'neutral' as LobbyingPosition,
-          clientId: null,
-          notes: [],
-          tags: sb.subject || [],
-          issue: sb.subject?.[0] || 'General',
-          progress: {
-            currentStage: sb.status,
-            stages: [
-              { name: 'Introduced', completed: true, date: sb.created_at },
-              { name: 'Committee', completed: false },
-              { name: 'Floor Vote', completed: false },
-              { name: 'Governor', completed: false }
-            ]
-          }
-        }));
+        const convertedBills = supabaseBills.map((sb: Record<string, unknown>) => {
+          const sponsorNames = sb.sponsor_names as string[] || [];
+          const subjects = sb.subject as string[] || [];
+          
+          return {
+            id: sb.id,
+            billNumber: sb.bill_number,
+            title: sb.title,
+            description: sb.description || '',
+            status: sb.status,
+            chamber: sb.chamber,
+            sponsor: sponsorNames[0] || 'Unknown',
+            coSponsors: sponsorNames.slice(1) || [],
+            introducedDate: sb.created_at,
+            lastActionDate: sb.updated_at,
+            fiscalNote: sb.fiscal_note || '',
+            position: 'neutral' as LobbyingPosition,
+            clientId: null,
+            notes: [],
+            tags: subjects,
+            issue: subjects[0] || 'General',
+            progress: {
+              currentStage: sb.status,
+              stages: [
+                { name: 'Introduced', completed: true, date: sb.created_at },
+                { name: 'Committee', completed: false },
+                { name: 'Floor Vote', completed: false },
+                { name: 'Governor', completed: false }
+              ]
+            }
+          };
+        });
 
         // Combine with sample bills if no real data yet
         if (convertedBills.length > 0) {
