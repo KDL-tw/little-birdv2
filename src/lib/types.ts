@@ -259,6 +259,56 @@ export interface ContactInfluence {
   lastUpdated: string;
 }
 
+// Compliance and Reporting Types
+export interface PositionChange {
+  id: string;
+  billId: string;
+  billNumber: string;
+  billTitle: string;
+  previousPosition?: LobbyingPosition;
+  newPosition: LobbyingPosition;
+  changedBy: string;
+  changedAt: string;
+  clientId?: string;
+  clientName?: string;
+  complianceDeadline?: string; // When position must be updated online
+  complianceStatus: 'pending' | 'completed' | 'overdue';
+  notes?: string;
+}
+
+export interface ClientAging {
+  id: string;
+  clientId: string;
+  clientName: string;
+  addedAt: string;
+  daysSinceAdded: number;
+  status: 'new' | 'recent' | 'established';
+  lastContact?: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
+export interface ReportingDeadline {
+  id: string;
+  name: string;
+  type: 'quarterly' | 'monthly' | 'annual' | 'custom';
+  deadlineDate: string;
+  frequency: 'monthly' | 'quarterly' | 'annually' | 'custom';
+  description?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  date: string;
+  type: 'deadline' | 'position_change' | 'client_reminder' | 'custom';
+  description?: string;
+  priority: 'high' | 'medium' | 'low';
+  isCompleted: boolean;
+}
+
 export interface ContactInfo {
   email?: string;
   phone?: string;
