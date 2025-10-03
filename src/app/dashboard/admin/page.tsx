@@ -17,7 +17,7 @@ import {
 import { fetchBills, fetchLegislators } from "@/lib/data";
 import { Layout } from "@/components/layout";
 import { useState, useEffect } from "react";
-import { syncBillsFromOpenStates, getRecentSyncRuns, getBillCount } from "@/lib/openstates";
+import { getBillCount, getRecentBulkSyncRuns, getDataFreshnessStats } from "@/lib/bulkData";
 
 export default function AdminPage() {
   // State for data counts
@@ -27,6 +27,12 @@ export default function AdminPage() {
   const [lastSync, setLastSync] = useState<string>('Never');
   const [syncStatus, setSyncStatus] = useState<'idle' | 'running' | 'success' | 'error'>('idle');
   const [syncMessage, setSyncMessage] = useState<string>('');
+  const [dataStats, setDataStats] = useState<{
+    total_bills: number;
+    fresh_data: number;
+    stale_data: number;
+    average_freshness_hours: number;
+  } | null>(null);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -36,8 +42,12 @@ export default function AdminPage() {
         const count = await getBillCount();
         setBillCount(count);
         
+        // Get data freshness stats
+        const stats = await getDataFreshnessStats();
+        setDataStats(stats);
+        
         // Get last sync info
-        const syncRuns = await getRecentSyncRuns(1);
+        const syncRuns = await getRecentBulkSyncRuns(1);
         if (syncRuns.length > 0) {
           const lastRun = syncRuns[0];
           setLastSync(new Date(lastRun.started_at).toLocaleString());
@@ -57,26 +67,14 @@ export default function AdminPage() {
 
   // Handler functions for sync buttons
   const handleSyncBills = async () => {
-    try {
-      setSyncStatus('running');
-      setSyncMessage('Connecting to OpenStates API...');
-      
-      const result = await syncBillsFromOpenStates();
-      
-      if (result.success) {
-        setSyncStatus('success');
-        setSyncMessage(`Successfully synced ${result.billsProcessed} bills from OpenStates`);
-        setBillCount(result.billsProcessed);
-        setLastSync(new Date().toLocaleString());
-      } else {
-        setSyncStatus('error');
-        setSyncMessage(`Sync failed: ${result.errors.length} errors occurred`);
-      }
-    } catch (error) {
-      setSyncStatus('error');
-      setSyncMessage(`Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      console.error('Sync error:', error);
-    }
+    setSyncStatus('running');
+    setSyncMessage('Bulk data import ready - upload OpenStates JSON file');
+    
+    // For now, just show the bulk import message
+    setTimeout(() => {
+      setSyncStatus('idle');
+      setSyncMessage('Ready for bulk data import from OpenStates JSON files');
+    }, 2000);
   };
 
   const handleSyncLegislators = () => {
@@ -161,6 +159,16 @@ export default function AdminPage() {
                   <p className="text-xs text-muted-foreground">
                     Status: {syncStatus === 'running' ? 'Syncing...' : syncStatus === 'success' ? 'Connected' : 'Ready'}
                   </p>
+                  {dataStats && (
+                    <>
+                      <p className="text-xs text-muted-foreground">
+                        Fresh Data: {dataStats.fresh_data} bills (&lt;24h old)
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Avg Age: {dataStats.average_freshness_hours.toFixed(1)} hours
+                      </p>
+                    </>
+                  )}
                 </div>
                 
                 <Button 

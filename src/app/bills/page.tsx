@@ -10,7 +10,7 @@ import { Layout } from "@/components/layout";
 import { BillCard } from "@/components/bill-card";
 import { Bill, LobbyingPosition } from "@/lib/types";
 import { sampleBills } from "@/lib/data/sampleData";
-import { getBills } from "@/lib/openstates";
+import { getBills } from "@/lib/bulkData";
 
 export default function BillsPage() {
   const [bills, setBills] = useState<Bill[]>(sampleBills);
