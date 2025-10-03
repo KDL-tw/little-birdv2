@@ -11,9 +11,7 @@ import {
   MapPin, 
   Trash2,
   AlertTriangle,
-  Building2,
-  Users,
-  Calendar
+  Users
 } from "lucide-react";
 import { Contact } from "@/lib/types";
 import { ContactProfileModal } from "./contact-profile-modal";
@@ -68,13 +66,6 @@ export function ContactCard({ contact, onDelete }: ContactCardProps) {
     setShowDeleteConfirm(false);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
 
   const getOrganizationBadge = () => {
     if (contact.clientId) {

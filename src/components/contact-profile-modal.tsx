@@ -28,7 +28,6 @@ import {
   Building2,
   Users,
   Target,
-  FileText,
   TrendingUp,
   Network
 } from "lucide-react";

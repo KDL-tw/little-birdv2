@@ -299,7 +299,7 @@ function DeadlineForm({
   onCancel 
 }: { 
   deadline?: ReportingDeadline;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: Omit<ReportingDeadline, 'id' | 'createdAt' | 'updatedAt'> | Partial<ReportingDeadline>) => void;
   onCancel: () => void;
 }) {
   const [formData, setFormData] = useState({
@@ -333,7 +333,7 @@ function DeadlineForm({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="text-sm text-gray-500">Type</label>
-          <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value as any }))}>
+          <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value as 'quarterly' | 'monthly' | 'annual' | 'custom' }))}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -348,7 +348,7 @@ function DeadlineForm({
 
         <div>
           <label className="text-sm text-gray-500">Frequency</label>
-          <Select value={formData.frequency} onValueChange={(value) => setFormData(prev => ({ ...prev, frequency: value as any }))}>
+          <Select value={formData.frequency} onValueChange={(value) => setFormData(prev => ({ ...prev, frequency: value as 'monthly' | 'quarterly' | 'annually' | 'custom' }))}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>

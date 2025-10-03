@@ -185,7 +185,7 @@ export function SimpleCalendar({ events }: SimpleCalendarProps) {
             <div className="mt-4 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
               <h4 className="font-medium text-indigo-900 mb-2 flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                Today's Events
+                Today&apos;s Events
               </h4>
               <div className="space-y-2">
                 {todayEvents.map(event => (

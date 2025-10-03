@@ -25,8 +25,6 @@ import {
   Phone,
   MapPin,
   MessageSquare,
-  Globe,
-  Calendar,
   Users,
   Target,
   FileText,
@@ -90,14 +88,6 @@ export function ClientProfileModal({ client, open, onOpenChange }: ClientProfile
   const [userStatus, setUserStatus] = useState(client.userStatus || 'prospect');
   const [userRelationship, setUserRelationship] = useState(client.userRelationship || 'standard');
   const [userValue, setUserValue] = useState(client.userValue || 'medium');
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
 
   const formatDateTime = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {

@@ -10,10 +10,7 @@ import {
   Phone, 
   MapPin, 
   Trash2,
-  AlertTriangle,
-  Globe,
-  Calendar,
-  Users
+  AlertTriangle
 } from "lucide-react";
 import { Client } from "@/lib/types";
 import { ClientProfileModal } from "./client-profile-modal";
@@ -33,13 +30,6 @@ const clientTypeColors = {
   other: "bg-slate-100 text-slate-800 border-slate-200"
 };
 
-const companySizeColors = {
-  startup: "bg-emerald-100 text-emerald-800 border-emerald-200",
-  small: "bg-blue-100 text-blue-800 border-blue-200",
-  medium: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  large: "bg-orange-100 text-orange-800 border-orange-200",
-  enterprise: "bg-red-100 text-red-800 border-red-200"
-};
 
 const priorityColors = {
   high: "bg-red-100 text-red-800 border-red-200",
@@ -70,13 +60,6 @@ export function ClientCard({ client, onDelete }: ClientCardProps) {
     setShowDeleteConfirm(false);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
 
   return (
     <>
