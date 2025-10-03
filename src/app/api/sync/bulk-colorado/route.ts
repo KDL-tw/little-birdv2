@@ -189,7 +189,6 @@ async function performStructureTest(): Promise<TestApiResponse> {
     };
     
   } catch (error) {
-    const duration = Date.now() - startTime;
     console.error('❌ Structure test failed:', error);
     
     return {

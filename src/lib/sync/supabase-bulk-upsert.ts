@@ -87,64 +87,6 @@ async function updateBulkSyncRun(
   }
 }
 
-/**
- * Upserts a single chunk of bills with retry logic (currently unused)
- */
-async function upsertBillsChunk(
-  _chunk: BatchChunk,
-  _maxRetries: number = MAX_RETRIES
-): Promise<UpsertResult> {
-  let lastError: Error | null = null;
-  
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      console.log(`📦 Processing chunk ${_chunk.chunkNumber} (${_chunk.size} bills) - Attempt ${attempt}`);
-      
-      const { data, error } = await supabase
-        .from('bills')
-        .upsert(_chunk.bills, {
-          onConflict: 'openstates_id',
-          ignoreDuplicates: false
-        })
-        .select('openstates_id');
-
-      if (error) {
-        throw error;
-      }
-
-      // Analyze results to determine created vs updated
-      const result = analyzeUpsertResults(_chunk.bills, data);
-      
-      console.log(`✅ Chunk ${_chunk.chunkNumber} complete: ${result.created} created, ${result.updated} updated`);
-      
-      return result;
-
-    } catch (error) {
-      lastError = error;
-      console.warn(`⚠️ Chunk ${_chunk.chunkNumber} attempt ${attempt} failed:`, error);
-      
-      if (attempt < maxRetries) {
-        const delay = RETRY_DELAY_MS * attempt; // Exponential backoff
-        console.log(`⏳ Retrying in ${delay}ms...`);
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    }
-  }
-
-  // If all retries failed, return error result
-  console.error(`❌ Chunk ${_chunk.chunkNumber} failed after ${_maxRetries} attempts`);
-  
-  return {
-    created: 0,
-    updated: 0,
-    failed: _chunk.size,
-    errors: [{
-      openstates_id: `chunk_${_chunk.chunkNumber}`,
-      error: lastError?.message || 'Unknown error',
-      chunkNumber: _chunk.chunkNumber
-    }]
-  };
-}
 
 /**
  * Analyzes upsert results to determine created vs updated counts

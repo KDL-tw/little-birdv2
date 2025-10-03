@@ -135,7 +135,7 @@ async function testLimitedFetch(): Promise<any[] | null> {
     if (result.errors.length > 0) {
       logWarning(`${result.errors.length} errors during fetch:`);
       result.errors.slice(0, 3).forEach(error => {
-        logSubStep(`  - ${error.bill_id}: ${error.error}`);
+        logSubStep(`  - ${error.openstates_id || error.bill_id || 'unknown'}: ${error.error}`);
       });
     }
     
