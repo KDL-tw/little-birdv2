@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     if (error) throw error;
 
     // Convert Supabase legislators to our Legislator type
-    const convertedLegislators: Legislator[] = (legislators || []).map((leg: any) => ({
+    const convertedLegislators: Legislator[] = (legislators || []).map((leg: Record<string, unknown>) => ({
       id: String(leg.id),
       fullName: String(leg.name),
       firstName: String(leg.first_name || ''),
@@ -85,6 +85,7 @@ export async function GET(request: NextRequest) {
     console.error('Error fetching legislators:', error);
     
     // Return empty result instead of error for now
+    const { searchParams } = new URL(request.url);
     return NextResponse.json({
       legislators: [],
       pagination: {

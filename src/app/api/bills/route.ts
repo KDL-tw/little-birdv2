@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Convert Supabase bills to our Bill type
-    const convertedBills: Bill[] = bills.map((sb: any) => {
+    const convertedBills: Bill[] = bills.map((sb: Record<string, unknown>) => {
       const sponsorNames = sb.sponsors?.names || [];
       const subjects = sb.subject || [];
       
@@ -38,12 +38,12 @@ export async function GET(request: NextRequest) {
         title: String(sb.title),
         description: String(sb.description || ''),
         billType: 'bill' as const,
-        status: String(sb.status) as any,
+        status: String(sb.status) as Bill['status'],
         sponsor: sponsorNames[0] || 'Unknown',
         coSponsors: sponsorNames.slice(1) || [],
         introducedDate: String(sb.created_at),
         lastActionDate: String(sb.updated_at),
-        chamber: String(sb.chamber) as any,
+        chamber: String(sb.chamber) as Bill['chamber'],
         fiscalNote: sb.fiscal_note ? {
           id: 'temp-id',
           billId: String(sb.id),
@@ -52,13 +52,13 @@ export async function GET(request: NextRequest) {
           agency: 'Unknown',
           createdAt: String(sb.created_at)
         } : undefined,
-        position: 'neutral' as any,
+            position: 'neutral' as Bill['position'],
         client: null,
         notes: '',
         tags: subjects,
         createdAt: String(sb.created_at),
         updatedAt: String(sb.updated_at),
-        progress: sb.actions ? Object.values(sb.actions).map((action: any, index: number) => ({
+            progress: sb.actions ? Object.values(sb.actions).map((action: Record<string, unknown>, index: number) => ({
           id: `progress-${index}`,
           billId: String(sb.id),
           stage: action.classification?.[0] || 'unknown',
