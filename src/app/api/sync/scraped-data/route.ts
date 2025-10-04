@@ -165,5 +165,5 @@ export async function POST(request: NextRequest): Promise<NextResponse<ScrapedDa
   }
 }
 
-// Set max duration for Vercel serverless function (10 minutes)
-export const maxDuration = 600;
+// Set max duration for Vercel serverless function (5 minutes - Hobby plan limit)
+export const maxDuration = 300;
