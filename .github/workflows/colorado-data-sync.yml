@@ -162,11 +162,16 @@ jobs:
         VERCEL_SYNC_URL: ${{ secrets.VERCEL_SYNC_URL }}
         CRON_SECRET: ${{ secrets.CRON_SECRET }}
         
-    - name: Commit Data
+    - name: Commit Data (Optional)
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add scraped-data/
-        git diff --staged --quiet || git commit -m "Update Colorado sample data [skip ci]"
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/KDL-tw/little-birdv2.git HEAD:main
+        if ! git diff --staged --quiet; then
+          git commit -m "Update Colorado sample data [skip ci]"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/KDL-tw/little-birdv2.git HEAD:main || echo "Push failed - continuing anyway"
+        else
+          echo "No changes to commit"
+        fi
       if: github.ref == 'refs/heads/main'
+      continue-on-error: true
