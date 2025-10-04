@@ -21,7 +21,9 @@ export default function BillsPage() {
   useEffect(() => {
     const loadBills = async () => {
       try {
-        const supabaseBills = await getBills(50, 0);
+        const response = await fetch('/api/bills?limit=50&offset=0');
+        const data = await response.json();
+        const supabaseBills = data.bills || [];
         
         // Convert Supabase bills to our Bill type
         const convertedBills = supabaseBills.map((sb: Record<string, unknown>) => {
@@ -71,7 +73,9 @@ export default function BillsPage() {
         // Combine with sample bills if no real data yet
         if (convertedBills.length > 0) {
           setBills(convertedBills);
+          console.log(`✅ Loaded ${convertedBills.length} bills from API`);
         } else {
+          console.log('📝 No bills found in API, keeping sample data');
           setBills(sampleBills);
         }
       } catch (error) {
