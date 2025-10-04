@@ -1,4 +1,4 @@
-name: Simple Colorado Data Sync (Updated)
+name: Colorado Data Sync
 
 on:
   schedule:
