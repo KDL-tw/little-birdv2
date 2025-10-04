@@ -29,7 +29,6 @@ interface ScrapedDataResponse {
 }
 
 // Configuration
-const MAX_DURATION_MS = 10 * 60 * 1000; // 10 minutes for Vercel
 const AUTHORIZATION_HEADER = 'Authorization';
 
 /**
@@ -166,5 +165,5 @@ export async function POST(request: NextRequest): Promise<NextResponse<ScrapedDa
   }
 }
 
-// Set max duration for Vercel serverless function
-export const maxDuration = MAX_DURATION_MS / 1000; // Convert to seconds
+// Set max duration for Vercel serverless function (10 minutes)
+export const maxDuration = 600;
