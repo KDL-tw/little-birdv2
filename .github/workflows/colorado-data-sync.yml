@@ -6,6 +6,9 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch: # Allow manual triggering
 
+permissions:
+  contents: write
+
 jobs:
   sync-colorado-data:
     runs-on: ubuntu-latest
@@ -165,5 +168,5 @@ jobs:
         git config --local user.name "GitHub Action"
         git add scraped-data/
         git diff --staged --quiet || git commit -m "Update Colorado sample data [skip ci]"
-        git push
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/KDL-tw/little-birdv2.git HEAD:main
       if: github.ref == 'refs/heads/main'
