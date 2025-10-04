@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   Calendar
 } from "lucide-react";
+import Image from "next/image";
 import { Legislator } from "@/lib/types";
 import { LegislatorProfileModal } from "./legislator-profile-modal";
 
@@ -73,9 +74,11 @@ export function LegislatorCard({ legislator, onDelete }: LegislatorCardProps) {
               <div className="flex-shrink-0">
                 <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                   {legislator.profileImage ? (
-                    <img 
+                    <Image 
                       src={legislator.profileImage} 
                       alt={legislator.fullName}
+                      width={64}
+                      height={64}
                       className="w-full h-full object-cover"
                     />
                   ) : (

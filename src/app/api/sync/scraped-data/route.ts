@@ -8,8 +8,8 @@ import { bulkUpsertColoradoBills } from '@/lib/sync/supabase-bulk-upsert';
 interface ScrapedDataRequest {
   source: string;
   data_type: 'scraped';
-  bills_data?: any[];
-  legislators_data?: any[];
+  bills_data?: Record<string, unknown>[];
+  legislators_data?: Record<string, unknown>[];
 }
 
 interface ScrapedDataResponse {
@@ -94,9 +94,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<ScrapedDa
       console.log(`✅ Found ${validBills.length} valid bills`);
       
       if (validBills.length > 0) {
-        // Transform data
-        const { chunks, errors } = processOpenStatesData(validBills);
-        console.log(`🔄 Transformed into ${chunks.length} chunks`);
+      // Transform data
+      const { chunks } = processOpenStatesData(validBills);
+      console.log(`🔄 Transformed into ${chunks.length} chunks`);
         
         if (chunks.length > 0) {
           // Upsert to Supabase
@@ -167,6 +167,4 @@ export async function POST(request: NextRequest): Promise<NextResponse<ScrapedDa
 }
 
 // Set max duration for Vercel serverless function
-export const config = {
-  maxDuration: MAX_DURATION_MS / 1000, // Convert to seconds
-};
+export const maxDuration = MAX_DURATION_MS / 1000; // Convert to seconds

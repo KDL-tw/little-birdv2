@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
 import {
   Select,
   SelectContent,
@@ -97,9 +98,11 @@ export function LegislatorProfileModal({ legislator, open, onOpenChange }: Legis
           <div className="flex items-center gap-4">
             <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
               {legislator.profileImage ? (
-                <img 
+                <Image 
                   src={legislator.profileImage} 
                   alt={legislator.fullName}
+                  width={80}
+                  height={80}
                   className="w-full h-full object-cover"
                 />
               ) : (
