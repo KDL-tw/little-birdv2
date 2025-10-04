@@ -1,0 +1,22 @@
+[
+  {
+    "id": "co-leg-001",
+    "name": "Jane Smith",
+    "party": "Democratic",
+    "chamber": "house",
+    "district": "HD-001",
+    "email": "jane.smith@leg.state.co.us",
+    "phone": "303-123-4567",
+    "office": "Room 200"
+  },
+  {
+    "id": "co-leg-002", 
+    "name": "Maria Garcia",
+    "party": "Republican",
+    "chamber": "senate",
+    "district": "SD-002",
+    "email": "maria.garcia@leg.state.co.us",
+    "phone": "303-234-5678",
+    "office": "Room 300"
+  }
+]

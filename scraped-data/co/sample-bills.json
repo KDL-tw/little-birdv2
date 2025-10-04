@@ -1,0 +1,68 @@
+[
+  {
+    "id": "co-2025-hb1001",
+    "bill_id": "HB24-1001",
+    "title": "Concerning the regulation of artificial intelligence systems",
+    "session": "2025",
+    "chamber": "house",
+    "status": "passed_lower",
+    "classification": ["bill"],
+    "subject": ["Technology", "Government Regulation"],
+    "sponsorships": [
+      {
+        "name": "Rep. Jane Smith",
+        "chamber": "house",
+        "type": "primary"
+      }
+    ],
+    "actions": [
+      {
+        "date": "2025-01-15",
+        "description": "Introduced in House",
+        "classification": ["introduction"],
+        "organization": {
+          "name": "Colorado House of Representatives"
+        }
+      }
+    ],
+    "votes": [],
+    "documents": [],
+    "versions": [],
+    "sources": [],
+    "created_at": "2025-01-15T00:00:00Z",
+    "updated_at": "2025-02-01T00:00:00Z"
+  },
+  {
+    "id": "co-2025-sb2001",
+    "bill_id": "SB24-2001",
+    "title": "Concerning renewable energy incentives",
+    "session": "2025",
+    "chamber": "senate",
+    "status": "passed_upper",
+    "classification": ["bill"],
+    "subject": ["Energy", "Environment"],
+    "sponsorships": [
+      {
+        "name": "Sen. Maria Garcia",
+        "chamber": "senate",
+        "type": "primary"
+      }
+    ],
+    "actions": [
+      {
+        "date": "2025-01-20",
+        "description": "Introduced in Senate",
+        "classification": ["introduction"],
+        "organization": {
+          "name": "Colorado Senate"
+        }
+      }
+    ],
+    "votes": [],
+    "documents": [],
+    "versions": [],
+    "sources": [],
+    "created_at": "2025-01-20T00:00:00Z",
+    "updated_at": "2025-01-20T00:00:00Z"
+  }
+]
